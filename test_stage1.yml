@@ -1,0 +1,31 @@
+name: realesrnet_stage1_test
+model_type: SRModel
+
+scale: 4
+num_gpu: 1
+
+datasets:
+  test:
+    name: anime_test
+    type: SingleImageDataset
+    dataroot_lq: ./datasets/test_LR  # your test LR images here
+    io_backend:
+      type: disk
+
+network_g:
+  type: RRDBNet
+  num_in_ch: 3
+  num_out_ch: 3
+  num_feat: 64
+  num_block: 23
+  num_grow_ch: 32
+  scale: 4
+
+path:
+  pretrain_network_g: ./net_g_45000.pth
+  strict_load_g: true
+
+# Optional: save output
+val:
+  save_img: true
+  suffix: ~
