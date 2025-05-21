@@ -1,6 +1,7 @@
 import argparse
 import glob
 import os
+from tqdm import tqdm
 from PIL import Image
 
 
@@ -11,14 +12,12 @@ def main(args):
     shortest_edge = 400
 
     path_list = sorted(glob.glob(os.path.join(args.input, '*')))
-    for path in path_list:
-        print(path)
+    for path in tqdm(path_list):
         basename = os.path.splitext(os.path.basename(path))[0]
 
         img = Image.open(path)
         width, height = img.size
         for idx, scale in enumerate(scale_list):
-            print(f'\t{scale:.2f}')
             rlt = img.resize((int(width * scale), int(height * scale)), resample=Image.LANCZOS)
             rlt.save(os.path.join(args.output, f'{basename}T{idx}.png'))
 

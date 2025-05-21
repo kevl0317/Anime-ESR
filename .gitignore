@@ -1,0 +1,6 @@
+datasets/*
+dataset_prep/*
+*img
+*png
+*pth
+*state

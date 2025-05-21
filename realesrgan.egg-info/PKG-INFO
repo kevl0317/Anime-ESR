@@ -1,4 +1,4 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: realesrgan
 Version: 0.3.0
 Summary: Real-ESRGAN aims at developing Practical Algorithms for General Image Restoration
@@ -32,6 +32,7 @@ Dynamic: description-content-type
 Dynamic: home-page
 Dynamic: keywords
 Dynamic: license
+Dynamic: license-file
 Dynamic: requires-dist
 Dynamic: summary
 

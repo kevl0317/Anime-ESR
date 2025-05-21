@@ -1,0 +1,1284 @@
+2025-05-15 23:12:21,068 INFO: 
+                ____                _       _____  ____
+               / __ ) ____ _ _____ (_)_____/ ___/ / __ \
+              / __  |/ __ `// ___// // ___/\__ \ / /_/ /
+             / /_/ // /_/ /(__  )/ // /__ ___/ // _, _/
+            /_____/ \__,_//____//_/ \___//____//_/ |_|
+     ______                   __   __                 __      __
+    / ____/____   ____   ____/ /  / /   __  __ _____ / /__   / /
+   / / __ / __ \ / __ \ / __  /  / /   / / / // ___// //_/  / /
+  / /_/ // /_/ // /_/ // /_/ /  / /___/ /_/ // /__ / /<    /_/
+  \____/ \____/ \____/ \____/  /_____/\____/ \___//_/|_|  (_)
+    
+Version Information: 
+	BasicSR: 1.4.2
+	PyTorch: 2.7.0+cu128
+	TorchVision: 0.22.0+cu128
+2025-05-15 23:12:21,085 INFO: 
+  name: train_RealESRGANx4plus_SOBEL_400k_B12G4
+  model_type: RealESRGANModel
+  scale: 4
+  num_gpu: 1
+  manual_seed: 0
+  lambda_edge: 1.0
+  lambda_flat: 0.2
+  sobel_thresh: 0.02
+  l1_gt_usm: True
+  percep_gt_usm: True
+  gan_gt_usm: False
+  resize_prob: [0.2, 0.7, 0.1]
+  resize_range: [0.15, 1.5]
+  gaussian_noise_prob: 0.5
+  noise_range: [1, 30]
+  poisson_scale_range: [0.05, 3]
+  gray_noise_prob: 0.4
+  jpeg_range: [30, 95]
+  second_blur_prob: 0.8
+  resize_prob2: [0.3, 0.4, 0.3]
+  resize_range2: [0.3, 1.2]
+  gaussian_noise_prob2: 0.5
+  noise_range2: [1, 25]
+  poisson_scale_range2: [0.05, 2.5]
+  gray_noise_prob2: 0.4
+  jpeg_range2: [30, 95]
+  gt_size: 256
+  queue_size: 180
+  datasets:[
+    train:[
+      name: DF2K+OST
+      type: RealESRGANDataset
+      dataroot_gt: datasets/
+      meta_info: datasets/meta_info.txt
+      io_backend:[
+        type: disk
+      ]
+      blur_kernel_size: 21
+      kernel_list: ['iso', 'aniso', 'generalized_iso', 'generalized_aniso', 'plateau_iso', 'plateau_aniso']
+      kernel_prob: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+      sinc_prob: 0.1
+      blur_sigma: [0.2, 3]
+      betag_range: [0.5, 4]
+      betap_range: [1, 2]
+      blur_kernel_size2: 21
+      kernel_list2: ['iso', 'aniso', 'generalized_iso', 'generalized_aniso', 'plateau_iso', 'plateau_aniso']
+      kernel_prob2: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+      sinc_prob2: 0.1
+      blur_sigma2: [0.2, 1.5]
+      betag_range2: [0.5, 4]
+      betap_range2: [1, 2]
+      final_sinc_prob: 0.8
+      gt_size: 256
+      use_hflip: True
+      use_rot: False
+      use_shuffle: True
+      num_worker_per_gpu: 5
+      batch_size_per_gpu: 12
+      dataset_enlarge_ratio: 1
+      prefetch_mode: None
+      phase: train
+      scale: 4
+    ]
+  ]
+  network_g:[
+    type: RRDBNet
+    num_in_ch: 3
+    num_out_ch: 3
+    num_feat: 64
+    num_block: 23
+    num_grow_ch: 32
+  ]
+  network_d:[
+    type: UNetDiscriminatorSN
+    num_in_ch: 3
+    num_feat: 64
+    skip_connection: True
+  ]
+  path:[
+    pretrain_network_g: E:\ECE 175B\Project\Real-ESRGAN\experiments\train_RealESRGANx4plus_SOBEL_400k_B12G4\models\net_g_35000.pth
+    param_key_g: params
+    strict_load_g: True
+    resume_state: experiments\train_RealESRGANx4plus_SOBEL_400k_B12G4\training_states\35000.state
+    experiments_root: E:\ECE 175B\Project\Real-ESRGAN\experiments\train_RealESRGANx4plus_SOBEL_400k_B12G4
+    models: E:\ECE 175B\Project\Real-ESRGAN\experiments\train_RealESRGANx4plus_SOBEL_400k_B12G4\models
+    training_states: E:\ECE 175B\Project\Real-ESRGAN\experiments\train_RealESRGANx4plus_SOBEL_400k_B12G4\training_states
+    log: E:\ECE 175B\Project\Real-ESRGAN\experiments\train_RealESRGANx4plus_SOBEL_400k_B12G4
+    visualization: E:\ECE 175B\Project\Real-ESRGAN\experiments\train_RealESRGANx4plus_SOBEL_400k_B12G4\visualization
+    pretrain_network_d: E:\ECE 175B\Project\Real-ESRGAN\experiments\train_RealESRGANx4plus_SOBEL_400k_B12G4\models\net_d_35000.pth
+  ]
+  train:[
+    ema_decay: 0.999
+    optim_g:[
+      type: Adam
+      lr: 0.0001
+      weight_decay: 0
+      betas: [0.9, 0.99]
+    ]
+    optim_d:[
+      type: Adam
+      lr: 0.0001
+      weight_decay: 0
+      betas: [0.9, 0.99]
+    ]
+    scheduler:[
+      type: MultiStepLR
+      milestones: [80000]
+      gamma: 0.5
+    ]
+    total_iter: 80000
+    warmup_iter: -1
+    pixel_opt:[
+      type: L1Loss
+      loss_weight: 1.0
+      reduction: mean
+    ]
+    perceptual_opt:[
+      type: PerceptualLoss
+      layer_weights:[
+        conv1_2: 0.1
+        conv2_2: 0.1
+        conv3_4: 1
+        conv4_4: 1
+        conv5_4: 1
+      ]
+      vgg_type: vgg19
+      use_input_norm: True
+      perceptual_weight: 1.0
+      style_weight: 0
+      range_norm: False
+      criterion: l1
+    ]
+    gan_opt:[
+      type: GANLoss
+      gan_type: vanilla
+      real_label_val: 1.0
+      fake_label_val: 0.0
+      loss_weight: 0.1
+    ]
+    net_d_iters: 1
+    net_d_init_iters: 0
+  ]
+  logger:[
+    print_freq: 100
+    save_checkpoint_freq: 5000.0
+    use_tb_logger: True
+    wandb:[
+      project: None
+      resume_id: None
+    ]
+  ]
+  dist_params:[
+    backend: nccl
+    port: 29500
+  ]
+  dist: False
+  rank: 0
+  world_size: 1
+  auto_resume: True
+  is_train: True
+  root_path: E:\ECE 175B\Project\Real-ESRGAN
+
+2025-05-15 23:12:21,765 INFO: Dataset [RealESRGANDataset] - DF2K+OST is built.
+2025-05-15 23:12:21,765 INFO: Training statistics:
+	Number of train images: 62940
+	Dataset enlarge ratio: 1
+	Batch size per gpu: 12
+	World size (gpu number): 1
+	Require iter number per epoch: 5245
+	Total epochs: 16; iters: 80000.
+2025-05-15 23:12:22,158 INFO: Network [RRDBNet] is created.
+2025-05-15 23:12:22,268 INFO: Network: RRDBNet, with parameters: 16,697,987
+2025-05-15 23:12:22,268 INFO: RRDBNet(
+  (conv_first): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (body): Sequential(
+    (0): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (1): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (2): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (3): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (4): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (5): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (6): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (7): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (8): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (9): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (10): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (11): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (12): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (13): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (14): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (15): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (16): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (17): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (18): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (19): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (20): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (21): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+    (22): RRDB(
+      (rdb1): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb2): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+      (rdb3): ResidualDenseBlock(
+        (conv1): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv2): Conv2d(96, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv3): Conv2d(128, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv4): Conv2d(160, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (conv5): Conv2d(192, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+      )
+    )
+  )
+  (conv_body): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (conv_up1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (conv_up2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (conv_hr): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (conv_last): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (lrelu): LeakyReLU(negative_slope=0.2, inplace=True)
+)
+2025-05-15 23:12:23,267 INFO: Loading RRDBNet model from E:\ECE 175B\Project\Real-ESRGAN\experiments\train_RealESRGANx4plus_SOBEL_400k_B12G4\models\net_g_35000.pth, with param key: [params].
+2025-05-15 23:12:23,425 INFO: Use Exponential Moving Average with decay: 0.999
+2025-05-15 23:12:23,770 INFO: Network [RRDBNet] is created.
+2025-05-15 23:12:24,235 INFO: Loading RRDBNet model from E:\ECE 175B\Project\Real-ESRGAN\experiments\train_RealESRGANx4plus_SOBEL_400k_B12G4\models\net_g_35000.pth, with param key: [params_ema].
+2025-05-15 23:12:24,440 INFO: Network [UNetDiscriminatorSN] is created.
+2025-05-15 23:12:24,456 INFO: Network: UNetDiscriminatorSN, with parameters: 4,376,897
+2025-05-15 23:12:24,456 INFO: UNetDiscriminatorSN(
+  (conv0): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+  (conv1): Conv2d(64, 128, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+  (conv2): Conv2d(128, 256, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+  (conv3): Conv2d(256, 512, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+  (conv4): Conv2d(512, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (conv5): Conv2d(256, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (conv6): Conv2d(128, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (conv7): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (conv8): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+  (conv9): Conv2d(64, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+)
+2025-05-15 23:12:24,640 INFO: Loading UNetDiscriminatorSN model from E:\ECE 175B\Project\Real-ESRGAN\experiments\train_RealESRGANx4plus_SOBEL_400k_B12G4\models\net_d_35000.pth, with param key: [params].
+2025-05-15 23:12:24,656 INFO: Loss [L1Loss] is created.
+2025-05-15 23:12:26,066 INFO: Loss [PerceptualLoss] is created.
+2025-05-15 23:12:26,143 INFO: Loss [GANLoss] is created.
+2025-05-15 23:12:26,176 INFO: Model [RealESRGANModel] is created.
+2025-05-15 23:12:26,191 INFO: Resuming training from epoch: 6, iter: 35000.
+2025-05-15 23:13:06,539 INFO: Start training from epoch: 6, iter: 35000
+2025-05-15 23:16:35,591 INFO: [train..][epoch:  6, iter:  35,100, lr:(1.000e-04,)] [eta: 1 day, 6:47:49, time (data): 2.091 (0.417)] l_g_pix: 3.3748e-02 l_g_percep: 7.6078e+00 l_g_gan: 1.5849e-01 l_g_edge: 4.7637e-02 l_g_flat: 6.5221e-03 l_d_real: 6.8656e-01 out_d_real: 1.1077e+00 l_d_fake: 3.4872e-01 out_d_fake: -1.2351e+00 
+2025-05-15 23:18:55,896 INFO: [train..][epoch:  6, iter:  35,200, lr:(1.000e-04,)] [eta: 1 day, 0:07:37, time (data): 1.747 (0.211)] l_g_pix: 4.5035e-02 l_g_percep: 9.3994e+00 l_g_gan: 1.8503e-01 l_g_edge: 6.5489e-02 l_g_flat: 6.5786e-03 l_d_real: 7.6252e-01 out_d_real: 1.2463e+00 l_d_fake: 2.6162e-01 out_d_fake: -1.5881e+00 
+2025-05-15 23:21:16,524 INFO: [train..][epoch:  6, iter:  35,300, lr:(1.000e-04,)] [eta: 21:52:35, time (data): 1.406 (0.004)] l_g_pix: 4.8574e-02 l_g_percep: 8.9635e+00 l_g_gan: 1.6560e-01 l_g_edge: 6.4716e-02 l_g_flat: 5.3113e-03 l_d_real: 6.2718e-01 out_d_real: 3.1352e+00 l_d_fake: 3.3067e-01 out_d_fake: -1.3244e+00 
+2025-05-15 23:23:38,195 INFO: [train..][epoch:  6, iter:  35,400, lr:(1.000e-04,)] [eta: 20:45:39, time (data): 1.412 (0.006)] l_g_pix: 4.2586e-02 l_g_percep: 9.7721e+00 l_g_gan: 1.3827e-01 l_g_edge: 6.6904e-02 l_g_flat: 5.8404e-03 l_d_real: 3.2048e-01 out_d_real: 3.2756e+00 l_d_fake: 4.2379e-01 out_d_fake: -9.5875e-01 
+2025-05-15 23:25:59,174 INFO: [train..][epoch:  6, iter:  35,500, lr:(1.000e-04,)] [eta: 20:03:29, time (data): 1.410 (0.005)] l_g_pix: 4.8093e-02 l_g_percep: 1.0707e+01 l_g_gan: 1.7668e-01 l_g_edge: 7.5677e-02 l_g_flat: 7.4170e-03 l_d_real: 5.9421e-01 out_d_real: 1.7315e+00 l_d_fake: 2.8866e-01 out_d_fake: -1.4777e+00 
+2025-05-15 23:28:19,950 INFO: [train..][epoch:  6, iter:  35,600, lr:(1.000e-04,)] [eta: 19:34:19, time (data): 1.409 (0.004)] l_g_pix: 4.7287e-02 l_g_percep: 9.8204e+00 l_g_gan: 1.4617e-01 l_g_edge: 7.1009e-02 l_g_flat: 5.2456e-03 l_d_real: 5.0283e-01 out_d_real: 2.4322e+00 l_d_fake: 4.4462e-01 out_d_fake: -1.0170e+00 
+2025-05-15 23:30:40,223 INFO: [train..][epoch:  6, iter:  35,700, lr:(1.000e-04,)] [eta: 19:12:16, time (data): 1.403 (0.005)] l_g_pix: 6.5135e-02 l_g_percep: 1.4189e+01 l_g_gan: 1.8601e-01 l_g_edge: 1.0245e-01 l_g_flat: 5.9449e-03 l_d_real: 2.7895e-01 out_d_real: 4.5030e+00 l_d_fake: 2.7527e-01 out_d_fake: -1.5845e+00 
+2025-05-15 23:33:01,950 INFO: [train..][epoch:  6, iter:  35,800, lr:(1.000e-04,)] [eta: 18:56:28, time (data): 1.410 (0.006)] l_g_pix: 3.8316e-02 l_g_percep: 7.1786e+00 l_g_gan: 1.5431e-01 l_g_edge: 5.1953e-02 l_g_flat: 5.8101e-03 l_d_real: 4.3764e-01 out_d_real: 2.9509e+00 l_d_fake: 3.8278e-01 out_d_fake: -1.1596e+00 
+2025-05-15 23:35:22,343 INFO: [train..][epoch:  6, iter:  35,900, lr:(1.000e-04,)] [eta: 18:42:35, time (data): 1.403 (0.005)] l_g_pix: 4.4499e-02 l_g_percep: 9.5421e+00 l_g_gan: 1.9160e-01 l_g_edge: 6.2858e-02 l_g_flat: 5.3931e-03 l_d_real: 5.5059e-01 out_d_real: 3.2496e+00 l_d_fake: 2.3858e-01 out_d_fake: -1.6764e+00 
+2025-05-15 23:37:43,478 INFO: [train..][epoch:  6, iter:  36,000, lr:(1.000e-04,)] [eta: 18:31:32, time (data): 1.407 (0.006)] l_g_pix: 4.7342e-02 l_g_percep: 1.0647e+01 l_g_gan: 2.3751e-01 l_g_edge: 7.5950e-02 l_g_flat: 6.4419e-03 l_d_real: 6.5867e-01 out_d_real: 2.8083e+00 l_d_fake: 1.6921e-01 out_d_fake: -2.2052e+00 
+2025-05-15 23:40:05,618 INFO: [train..][epoch:  6, iter:  36,100, lr:(1.000e-04,)] [eta: 18:22:44, time (data): 1.420 (0.007)] l_g_pix: 4.5635e-02 l_g_percep: 9.8413e+00 l_g_gan: 1.3467e-01 l_g_edge: 6.7614e-02 l_g_flat: 8.0668e-03 l_d_real: 3.6906e-01 out_d_real: 3.4564e+00 l_d_fake: 4.9995e-01 out_d_fake: -8.4650e-01 
+2025-05-15 23:42:26,799 INFO: [train..][epoch:  6, iter:  36,200, lr:(1.000e-04,)] [eta: 18:14:25, time (data): 1.416 (0.007)] l_g_pix: 3.6761e-02 l_g_percep: 8.2632e+00 l_g_gan: 2.1557e-01 l_g_edge: 5.0919e-02 l_g_flat: 4.9090e-03 l_d_real: 7.1032e-01 out_d_real: 1.5537e+00 l_d_fake: 2.0015e-01 out_d_fake: -1.9552e+00 
+2025-05-15 23:44:46,816 INFO: [train..][epoch:  6, iter:  36,300, lr:(1.000e-04,)] [eta: 18:06:23, time (data): 1.400 (0.007)] l_g_pix: 4.6608e-02 l_g_percep: 1.0502e+01 l_g_gan: 1.4833e-01 l_g_edge: 7.7949e-02 l_g_flat: 6.2564e-03 l_d_real: 3.9977e-01 out_d_real: 2.3955e+00 l_d_fake: 4.1306e-01 out_d_fake: -1.0700e+00 
+2025-05-15 23:47:07,433 INFO: [train..][epoch:  6, iter:  36,400, lr:(1.000e-04,)] [eta: 17:59:28, time (data): 1.403 (0.007)] l_g_pix: 4.4359e-02 l_g_percep: 9.8522e+00 l_g_gan: 1.6722e-01 l_g_edge: 7.0402e-02 l_g_flat: 6.2415e-03 l_d_real: 6.0732e-01 out_d_real: 1.3555e+00 l_d_fake: 2.9774e-01 out_d_fake: -1.3741e+00 
+2025-05-15 23:49:27,482 INFO: [train..][epoch:  6, iter:  36,500, lr:(1.000e-04,)] [eta: 17:52:53, time (data): 1.401 (0.007)] l_g_pix: 4.9177e-02 l_g_percep: 1.0643e+01 l_g_gan: 1.2237e-01 l_g_edge: 7.6984e-02 l_g_flat: 6.9054e-03 l_d_real: 2.5226e-01 out_d_real: 4.3210e+00 l_d_fake: 5.1392e-01 out_d_fake: -7.0974e-01 
+2025-05-15 23:51:48,975 INFO: [train..][epoch:  6, iter:  36,600, lr:(1.000e-04,)] [eta: 17:47:28, time (data): 1.408 (0.006)] l_g_pix: 3.6907e-02 l_g_percep: 8.9277e+00 l_g_gan: 1.6028e-01 l_g_edge: 5.5000e-02 l_g_flat: 5.4187e-03 l_d_real: 4.2625e-01 out_d_real: 2.8499e+00 l_d_fake: 3.0233e-01 out_d_fake: -1.3003e+00 
+2025-05-15 23:54:10,048 INFO: [train..][epoch:  6, iter:  36,700, lr:(1.000e-04,)] [eta: 17:42:15, time (data): 1.412 (0.006)] l_g_pix: 4.5573e-02 l_g_percep: 9.7823e+00 l_g_gan: 1.6025e-01 l_g_edge: 7.2409e-02 l_g_flat: 6.8693e-03 l_d_real: 3.7722e-01 out_d_real: 3.0548e+00 l_d_fake: 3.8588e-01 out_d_fake: -1.2157e+00 
+2025-05-15 23:56:31,702 INFO: [train..][epoch:  6, iter:  36,800, lr:(1.000e-04,)] [eta: 17:37:35, time (data): 1.415 (0.007)] l_g_pix: 4.4786e-02 l_g_percep: 1.0131e+01 l_g_gan: 1.9270e-01 l_g_edge: 7.0054e-02 l_g_flat: 6.0247e-03 l_d_real: 4.1998e-01 out_d_real: 3.8176e+00 l_d_fake: 2.4515e-01 out_d_fake: -1.6807e+00 
+2025-05-15 23:58:52,780 INFO: [train..][epoch:  6, iter:  36,900, lr:(1.000e-04,)] [eta: 17:32:56, time (data): 1.412 (0.006)] l_g_pix: 4.5927e-02 l_g_percep: 1.0279e+01 l_g_gan: 1.9956e-01 l_g_edge: 7.1046e-02 l_g_flat: 6.7265e-03 l_d_real: 7.0831e-01 out_d_real: 1.6875e+00 l_d_fake: 2.1588e-01 out_d_fake: -1.7791e+00 
+2025-05-16 00:01:13,405 INFO: [train..][epoch:  6, iter:  37,000, lr:(1.000e-04,)] [eta: 17:28:22, time (data): 1.409 (0.007)] l_g_pix: 5.5149e-02 l_g_percep: 9.6227e+00 l_g_gan: 1.7525e-01 l_g_edge: 7.3939e-02 l_g_flat: 7.7604e-03 l_d_real: 6.4894e-01 out_d_real: 1.2735e+00 l_d_fake: 2.7683e-01 out_d_fake: -1.4751e+00 
+2025-05-16 00:03:34,254 INFO: [train..][epoch:  6, iter:  37,100, lr:(1.000e-04,)] [eta: 17:24:04, time (data): 1.409 (0.007)] l_g_pix: 3.0340e-02 l_g_percep: 6.5185e+00 l_g_gan: 1.2915e-01 l_g_edge: 3.7986e-02 l_g_flat: 5.9463e-03 l_d_real: 4.5895e-01 out_d_real: 2.4243e+00 l_d_fake: 5.5798e-01 out_d_fake: -7.3355e-01 
+2025-05-16 00:05:54,642 INFO: [train..][epoch:  6, iter:  37,200, lr:(1.000e-04,)] [eta: 17:19:49, time (data): 1.406 (0.007)] l_g_pix: 5.2666e-02 l_g_percep: 1.0238e+01 l_g_gan: 1.2019e-01 l_g_edge: 8.1360e-02 l_g_flat: 6.9124e-03 l_d_real: 2.5565e-01 out_d_real: 5.7410e+00 l_d_fake: 6.2804e-01 out_d_fake: -5.7385e-01 
+2025-05-16 00:08:15,490 INFO: [train..][epoch:  6, iter:  37,300, lr:(1.000e-04,)] [eta: 17:15:51, time (data): 1.408 (0.007)] l_g_pix: 3.7732e-02 l_g_percep: 8.0841e+00 l_g_gan: 1.5538e-01 l_g_edge: 4.6603e-02 l_g_flat: 4.2386e-03 l_d_real: 4.8917e-01 out_d_real: 2.5964e+00 l_d_fake: 3.5490e-01 out_d_fake: -1.1985e+00 
+2025-05-16 00:10:36,098 INFO: [train..][epoch:  6, iter:  37,400, lr:(1.000e-04,)] [eta: 17:11:58, time (data): 1.407 (0.007)] l_g_pix: 4.4306e-02 l_g_percep: 1.0206e+01 l_g_gan: 1.8519e-01 l_g_edge: 6.8055e-02 l_g_flat: 7.5508e-03 l_d_real: 5.4647e-01 out_d_real: 2.3911e+00 l_d_fake: 2.5118e-01 out_d_fake: -1.5995e+00 
+2025-05-16 00:12:56,997 INFO: [train..][epoch:  6, iter:  37,500, lr:(1.000e-04,)] [eta: 17:08:17, time (data): 1.409 (0.008)] l_g_pix: 5.4147e-02 l_g_percep: 1.1382e+01 l_g_gan: 1.7441e-01 l_g_edge: 8.5217e-02 l_g_flat: 6.2844e-03 l_d_real: 4.5100e-01 out_d_real: 4.2009e+00 l_d_fake: 3.4781e-01 out_d_fake: -1.3949e+00 
+2025-05-16 00:15:17,558 INFO: [train..][epoch:  6, iter:  37,600, lr:(1.000e-04,)] [eta: 17:04:37, time (data): 1.407 (0.007)] l_g_pix: 4.8992e-02 l_g_percep: 1.0474e+01 l_g_gan: 1.3755e-01 l_g_edge: 7.9555e-02 l_g_flat: 6.6282e-03 l_d_real: 4.0745e-01 out_d_real: 5.2748e+00 l_d_fake: 5.4137e-01 out_d_fake: -8.3412e-01 
+2025-05-16 00:17:39,245 INFO: [train..][epoch:  6, iter:  37,700, lr:(1.000e-04,)] [eta: 17:01:20, time (data): 1.420 (0.007)] l_g_pix: 5.5752e-02 l_g_percep: 1.1129e+01 l_g_gan: 1.7817e-01 l_g_edge: 8.6435e-02 l_g_flat: 7.4002e-03 l_d_real: 3.8891e-01 out_d_real: 3.6464e+00 l_d_fake: 3.0965e-01 out_d_fake: -1.4707e+00 
+2025-05-16 00:20:02,116 INFO: [train..][epoch:  6, iter:  37,800, lr:(1.000e-04,)] [eta: 16:58:25, time (data): 1.425 (0.007)] l_g_pix: 5.6624e-02 l_g_percep: 1.1725e+01 l_g_gan: 1.8037e-01 l_g_edge: 9.1167e-02 l_g_flat: 6.4452e-03 l_d_real: 4.6967e-01 out_d_real: 4.6686e+00 l_d_fake: 3.2370e-01 out_d_fake: -1.4795e+00 
+2025-05-16 00:22:25,305 INFO: [train..][epoch:  6, iter:  37,900, lr:(1.000e-04,)] [eta: 16:55:37, time (data): 1.437 (0.006)] l_g_pix: 4.2980e-02 l_g_percep: 9.3564e+00 l_g_gan: 1.6504e-01 l_g_edge: 6.4895e-02 l_g_flat: 8.4643e-03 l_d_real: 4.7968e-01 out_d_real: 2.1149e+00 l_d_fake: 3.4894e-01 out_d_fake: -1.3012e+00 
+2025-05-16 00:24:48,611 INFO: [train..][epoch:  6, iter:  38,000, lr:(1.000e-04,)] [eta: 16:52:52, time (data): 1.435 (0.007)] l_g_pix: 4.1490e-02 l_g_percep: 9.0067e+00 l_g_gan: 1.7108e-01 l_g_edge: 6.2676e-02 l_g_flat: 6.0344e-03 l_d_real: 4.3909e-01 out_d_real: 3.9127e+00 l_d_fake: 3.1901e-01 out_d_fake: -1.3911e+00 
+2025-05-16 00:27:09,059 INFO: [train..][epoch:  6, iter:  38,100, lr:(1.000e-04,)] [eta: 16:49:30, time (data): 1.406 (0.006)] l_g_pix: 4.8400e-02 l_g_percep: 1.0983e+01 l_g_gan: 1.4893e-01 l_g_edge: 7.3539e-02 l_g_flat: 4.6353e-03 l_d_real: 3.0007e-01 out_d_real: 3.6848e+00 l_d_fake: 4.3086e-01 out_d_fake: -1.0577e+00 
+2025-05-16 00:29:30,379 INFO: [train..][epoch:  6, iter:  38,200, lr:(1.000e-04,)] [eta: 16:46:23, time (data): 1.410 (0.007)] l_g_pix: 3.1612e-02 l_g_percep: 7.8804e+00 l_g_gan: 1.4569e-01 l_g_edge: 4.6987e-02 l_g_flat: 4.2874e-03 l_d_real: 3.7768e-01 out_d_real: 3.0161e+00 l_d_fake: 3.8248e-01 out_d_fake: -1.0741e+00 
+2025-05-16 00:31:50,755 INFO: [train..][epoch:  6, iter:  38,300, lr:(1.000e-04,)] [eta: 16:43:07, time (data): 1.404 (0.007)] l_g_pix: 4.7173e-02 l_g_percep: 1.0551e+01 l_g_gan: 1.4475e-01 l_g_edge: 6.8082e-02 l_g_flat: 5.5737e-03 l_d_real: 3.6537e-01 out_d_real: 2.8908e+00 l_d_fake: 4.2118e-01 out_d_fake: -1.0261e+00 
+2025-05-16 00:34:11,638 INFO: [train..][epoch:  6, iter:  38,400, lr:(1.000e-04,)] [eta: 16:40:00, time (data): 1.407 (0.007)] l_g_pix: 3.1826e-02 l_g_percep: 7.0933e+00 l_g_gan: 1.7430e-01 l_g_edge: 4.9670e-02 l_g_flat: 3.7725e-03 l_d_real: 5.6833e-01 out_d_real: 4.9045e+00 l_d_fake: 2.8339e-01 out_d_fake: -1.4594e+00 
+2025-05-16 00:36:32,318 INFO: [train..][epoch:  6, iter:  38,500, lr:(1.000e-04,)] [eta: 16:36:54, time (data): 1.407 (0.005)] l_g_pix: 3.9122e-02 l_g_percep: 8.3475e+00 l_g_gan: 1.4162e-01 l_g_edge: 6.3095e-02 l_g_flat: 4.6838e-03 l_d_real: 3.8843e-01 out_d_real: 4.2877e+00 l_d_fake: 3.8463e-01 out_d_fake: -1.0312e+00 
+2025-05-16 00:38:52,686 INFO: [train..][epoch:  6, iter:  38,600, lr:(1.000e-04,)] [eta: 16:33:46, time (data): 1.405 (0.005)] l_g_pix: 3.7491e-02 l_g_percep: 9.1660e+00 l_g_gan: 1.7415e-01 l_g_edge: 5.9979e-02 l_g_flat: 6.2120e-03 l_d_real: 4.2150e-01 out_d_real: 2.5602e+00 l_d_fake: 3.0925e-01 out_d_fake: -1.4321e+00 
+2025-05-16 00:41:12,977 INFO: [train..][epoch:  6, iter:  38,700, lr:(1.000e-04,)] [eta: 16:30:40, time (data): 1.405 (0.004)] l_g_pix: 4.6578e-02 l_g_percep: 9.8634e+00 l_g_gan: 1.8196e-01 l_g_edge: 6.7320e-02 l_g_flat: 4.6915e-03 l_d_real: 5.7110e-01 out_d_real: 2.0509e+00 l_d_fake: 2.6108e-01 out_d_fake: -1.5579e+00 
+2025-05-16 00:43:33,895 INFO: [train..][epoch:  6, iter:  38,800, lr:(1.000e-04,)] [eta: 16:27:44, time (data): 1.407 (0.005)] l_g_pix: 4.5982e-02 l_g_percep: 8.8250e+00 l_g_gan: 1.4039e-01 l_g_edge: 5.9093e-02 l_g_flat: 5.6536e-03 l_d_real: 4.2911e-01 out_d_real: 3.2891e+00 l_d_fake: 4.5029e-01 out_d_fake: -9.5368e-01 
+2025-05-16 00:45:54,391 INFO: [train..][epoch:  6, iter:  38,900, lr:(1.000e-04,)] [eta: 16:24:45, time (data): 1.403 (0.004)] l_g_pix: 4.6083e-02 l_g_percep: 1.0113e+01 l_g_gan: 1.5007e-01 l_g_edge: 6.2944e-02 l_g_flat: 6.6605e-03 l_d_real: 4.2882e-01 out_d_real: 1.9746e+00 l_d_fake: 3.6476e-01 out_d_fake: -1.1357e+00 
+2025-05-16 00:48:15,493 INFO: [train..][epoch:  6, iter:  39,000, lr:(1.000e-04,)] [eta: 16:21:54, time (data): 1.408 (0.005)] l_g_pix: 4.6894e-02 l_g_percep: 1.0838e+01 l_g_gan: 1.8309e-01 l_g_edge: 8.0567e-02 l_g_flat: 5.2707e-03 l_d_real: 3.6083e-01 out_d_real: 5.1589e+00 l_d_fake: 3.5195e-01 out_d_fake: -1.4776e+00 
+2025-05-16 00:50:35,923 INFO: [train..][epoch:  6, iter:  39,100, lr:(1.000e-04,)] [eta: 16:18:57, time (data): 1.404 (0.005)] l_g_pix: 5.1104e-02 l_g_percep: 1.1522e+01 l_g_gan: 1.4346e-01 l_g_edge: 8.3458e-02 l_g_flat: 4.4743e-03 l_d_real: 1.9185e-01 out_d_real: 6.4867e+00 l_d_fake: 4.4878e-01 out_d_fake: -9.8530e-01 
+2025-05-16 00:52:57,333 INFO: [train..][epoch:  6, iter:  39,200, lr:(1.000e-04,)] [eta: 16:16:12, time (data): 1.410 (0.006)] l_g_pix: 4.3573e-02 l_g_percep: 9.4927e+00 l_g_gan: 1.5500e-01 l_g_edge: 7.3761e-02 l_g_flat: 6.9607e-03 l_d_real: 2.7665e-01 out_d_real: 4.8390e+00 l_d_fake: 4.0297e-01 out_d_fake: -1.1470e+00 
+2025-05-16 00:55:19,147 INFO: [train..][epoch:  6, iter:  39,300, lr:(1.000e-04,)] [eta: 16:13:32, time (data): 1.423 (0.006)] l_g_pix: 4.6231e-02 l_g_percep: 9.0678e+00 l_g_gan: 1.3960e-01 l_g_edge: 6.9382e-02 l_g_flat: 3.9505e-03 l_d_real: 2.3763e-01 out_d_real: 6.0448e+00 l_d_fake: 4.4841e-01 out_d_fake: -9.4726e-01 
+2025-05-16 00:57:40,449 INFO: [train..][epoch:  6, iter:  39,400, lr:(1.000e-04,)] [eta: 16:10:48, time (data): 1.417 (0.006)] l_g_pix: 5.7017e-02 l_g_percep: 1.1463e+01 l_g_gan: 1.6249e-01 l_g_edge: 8.3805e-02 l_g_flat: 7.7485e-03 l_d_real: 3.6910e-01 out_d_real: 3.8778e+00 l_d_fake: 4.7370e-01 out_d_fake: -1.1506e+00 
+2025-05-16 01:00:01,285 INFO: [train..][epoch:  6, iter:  39,500, lr:(1.000e-04,)] [eta: 16:08:01, time (data): 1.407 (0.008)] l_g_pix: 5.1998e-02 l_g_percep: 1.0824e+01 l_g_gan: 1.6355e-01 l_g_edge: 7.6406e-02 l_g_flat: 6.3880e-03 l_d_real: 3.9699e-01 out_d_real: 4.6656e+00 l_d_fake: 3.5261e-01 out_d_fake: -1.2823e+00 
+2025-05-16 01:02:21,342 INFO: [train..][epoch:  6, iter:  39,600, lr:(1.000e-04,)] [eta: 16:05:08, time (data): 1.403 (0.007)] l_g_pix: 5.1854e-02 l_g_percep: 1.0291e+01 l_g_gan: 1.7037e-01 l_g_edge: 7.8387e-02 l_g_flat: 8.9430e-03 l_d_real: 6.1448e-01 out_d_real: 1.4456e+00 l_d_fake: 3.3766e-01 out_d_fake: -1.3656e+00 
+2025-05-16 01:04:41,112 INFO: [train..][epoch:  6, iter:  39,700, lr:(1.000e-04,)] [eta: 16:02:14, time (data): 1.398 (0.008)] l_g_pix: 5.5660e-02 l_g_percep: 9.8890e+00 l_g_gan: 1.7352e-01 l_g_edge: 7.1996e-02 l_g_flat: 8.3502e-03 l_d_real: 4.1775e-01 out_d_real: 4.4262e+00 l_d_fake: 3.2890e-01 out_d_fake: -1.4063e+00 
+2025-05-16 01:07:02,230 INFO: [train..][epoch:  6, iter:  39,800, lr:(1.000e-04,)] [eta: 15:59:33, time (data): 1.405 (0.008)] l_g_pix: 4.7610e-02 l_g_percep: 1.0611e+01 l_g_gan: 2.2539e-01 l_g_edge: 7.0712e-02 l_g_flat: 7.8945e-03 l_d_real: 7.7150e-01 out_d_real: 1.6606e+00 l_d_fake: 1.7841e-01 out_d_fake: -2.0743e+00 
+2025-05-16 01:09:24,225 INFO: [train..][epoch:  6, iter:  39,900, lr:(1.000e-04,)] [eta: 15:57:00, time (data): 1.411 (0.007)] l_g_pix: 5.2540e-02 l_g_percep: 1.1261e+01 l_g_gan: 1.9234e-01 l_g_edge: 7.8840e-02 l_g_flat: 6.3171e-03 l_d_real: 5.4923e-01 out_d_real: 2.5853e+00 l_d_fake: 2.8152e-01 out_d_fake: -1.6414e+00 
+2025-05-16 01:11:45,742 INFO: [train..][epoch:  6, iter:  40,000, lr:(1.000e-04,)] [eta: 15:54:23, time (data): 1.413 (0.007)] l_g_pix: 6.0624e-02 l_g_percep: 1.2274e+01 l_g_gan: 1.7921e-01 l_g_edge: 8.8089e-02 l_g_flat: 8.7524e-03 l_d_real: 5.0287e-01 out_d_real: 3.3757e+00 l_d_fake: 3.2133e-01 out_d_fake: -1.4699e+00 
+2025-05-16 01:11:45,742 INFO: Saving models and training states.
+2025-05-16 01:14:08,634 INFO: [train..][epoch:  6, iter:  40,100, lr:(1.000e-04,)] [eta: 15:51:58, time (data): 1.415 (0.007)] l_g_pix: 4.8604e-02 l_g_percep: 1.0358e+01 l_g_gan: 1.7540e-01 l_g_edge: 8.0827e-02 l_g_flat: 6.9160e-03 l_d_real: 4.9881e-01 out_d_real: 3.2508e+00 l_d_fake: 2.9737e-01 out_d_fake: -1.4557e+00 
+2025-05-16 01:16:29,276 INFO: [train..][epoch:  6, iter:  40,200, lr:(1.000e-04,)] [eta: 15:49:15, time (data): 1.410 (0.007)] l_g_pix: 4.6428e-02 l_g_percep: 9.0527e+00 l_g_gan: 2.0286e-01 l_g_edge: 6.4269e-02 l_g_flat: 5.9939e-03 l_d_real: 7.3198e-01 out_d_real: 1.4997e+00 l_d_fake: 1.9869e-01 out_d_fake: -1.8290e+00 
+2025-05-16 01:19:31,750 INFO: [train..][epoch:  7, iter:  40,300, lr:(1.000e-04,)] [eta: 15:51:47, time (data): 1.974 (0.579)] l_g_pix: 3.7926e-02 l_g_percep: 8.4271e+00 l_g_gan: 1.6480e-01 l_g_edge: 5.7753e-02 l_g_flat: 6.6509e-03 l_d_real: 4.0748e-01 out_d_real: 2.7921e+00 l_d_fake: 3.7927e-01 out_d_fake: -1.2684e+00 
+2025-05-16 01:21:52,684 INFO: [train..][epoch:  7, iter:  40,400, lr:(1.000e-04,)] [eta: 15:49:02, time (data): 1.649 (0.251)] l_g_pix: 5.0081e-02 l_g_percep: 1.0325e+01 l_g_gan: 1.6129e-01 l_g_edge: 7.8986e-02 l_g_flat: 6.4717e-03 l_d_real: 3.7308e-01 out_d_real: 4.3796e+00 l_d_fake: 3.8529e-01 out_d_fake: -1.2265e+00 
+2025-05-16 01:24:13,529 INFO: [train..][epoch:  7, iter:  40,500, lr:(1.000e-04,)] [eta: 15:46:17, time (data): 1.412 (0.008)] l_g_pix: 7.2582e-02 l_g_percep: 1.4776e+01 l_g_gan: 1.9685e-01 l_g_edge: 1.2270e-01 l_g_flat: 6.8338e-03 l_d_real: 3.0160e-01 out_d_real: 5.2166e+00 l_d_fake: 2.8859e-01 out_d_fake: -1.6783e+00 
+2025-05-16 01:26:35,360 INFO: [train..][epoch:  7, iter:  40,600, lr:(1.000e-04,)] [eta: 15:43:40, time (data): 1.416 (0.007)] l_g_pix: 5.5083e-02 l_g_percep: 1.0490e+01 l_g_gan: 1.8925e-01 l_g_edge: 6.9562e-02 l_g_flat: 7.1222e-03 l_d_real: 7.2817e-01 out_d_real: 1.5920e+00 l_d_fake: 2.6819e-01 out_d_fake: -1.6239e+00 
+2025-05-16 01:28:56,457 INFO: [train..][epoch:  7, iter:  40,700, lr:(1.000e-04,)] [eta: 15:40:58, time (data): 1.411 (0.006)] l_g_pix: 5.4024e-02 l_g_percep: 1.2307e+01 l_g_gan: 1.8136e-01 l_g_edge: 8.9994e-02 l_g_flat: 5.4200e-03 l_d_real: 4.3476e-01 out_d_real: 3.3437e+00 l_d_fake: 2.6213e-01 out_d_fake: -1.5511e+00 
+2025-05-16 01:31:17,991 INFO: [train..][epoch:  7, iter:  40,800, lr:(1.000e-04,)] [eta: 15:38:20, time (data): 1.413 (0.005)] l_g_pix: 5.0773e-02 l_g_percep: 1.2474e+01 l_g_gan: 1.3155e-01 l_g_edge: 8.6814e-02 l_g_flat: 5.8915e-03 l_d_real: 3.1175e-01 out_d_real: 4.7728e+00 l_d_fake: 5.0554e-01 out_d_fake: -8.0981e-01 
+2025-05-16 01:33:38,388 INFO: [train..][epoch:  7, iter:  40,900, lr:(1.000e-04,)] [eta: 15:35:35, time (data): 1.403 (0.004)] l_g_pix: 4.8825e-02 l_g_percep: 1.0550e+01 l_g_gan: 2.0579e-01 l_g_edge: 7.5446e-02 l_g_flat: 7.0638e-03 l_d_real: 6.4574e-01 out_d_real: 1.3145e+00 l_d_fake: 2.3349e-01 out_d_fake: -1.8229e+00 
+2025-05-16 01:35:59,375 INFO: [train..][epoch:  7, iter:  41,000, lr:(1.000e-04,)] [eta: 15:32:54, time (data): 1.407 (0.004)] l_g_pix: 5.6443e-02 l_g_percep: 1.0608e+01 l_g_gan: 1.8848e-01 l_g_edge: 7.9985e-02 l_g_flat: 5.6884e-03 l_d_real: 4.1388e-01 out_d_real: 2.4453e+00 l_d_fake: 2.6448e-01 out_d_fake: -1.6199e+00 
+2025-05-16 01:38:19,843 INFO: [train..][epoch:  7, iter:  41,100, lr:(1.000e-04,)] [eta: 15:30:11, time (data): 1.404 (0.003)] l_g_pix: 4.7243e-02 l_g_percep: 1.0027e+01 l_g_gan: 1.3318e-01 l_g_edge: 7.0364e-02 l_g_flat: 5.2054e-03 l_d_real: 3.0055e-01 out_d_real: 4.6225e+00 l_d_fake: 4.7071e-01 out_d_fake: -8.6109e-01 
+2025-05-16 01:40:43,052 INFO: [train..][epoch:  7, iter:  41,200, lr:(1.000e-04,)] [eta: 15:27:46, time (data): 1.421 (0.006)] l_g_pix: 4.8168e-02 l_g_percep: 1.0456e+01 l_g_gan: 2.0288e-01 l_g_edge: 7.6059e-02 l_g_flat: 7.1138e-03 l_d_real: 6.7640e-01 out_d_real: 2.1174e+00 l_d_fake: 2.4813e-01 out_d_fake: -1.7798e+00 
+2025-05-16 01:43:04,531 INFO: [train..][epoch:  7, iter:  41,300, lr:(1.000e-04,)] [eta: 15:25:10, time (data): 1.408 (0.006)] l_g_pix: 3.7441e-02 l_g_percep: 7.9987e+00 l_g_gan: 1.4464e-01 l_g_edge: 5.3193e-02 l_g_flat: 5.2141e-03 l_d_real: 3.5347e-01 out_d_real: 3.4682e+00 l_d_fake: 4.1267e-01 out_d_fake: -1.0337e+00 
+2025-05-16 01:45:24,996 INFO: [train..][epoch:  7, iter:  41,400, lr:(1.000e-04,)] [eta: 15:22:29, time (data): 1.406 (0.006)] l_g_pix: 4.0989e-02 l_g_percep: 9.2139e+00 l_g_gan: 1.6854e-01 l_g_edge: 6.2402e-02 l_g_flat: 4.1783e-03 l_d_real: 3.0249e-01 out_d_real: 4.5871e+00 l_d_fake: 3.7915e-01 out_d_fake: -1.3059e+00 
+2025-05-16 01:47:45,244 INFO: [train..][epoch:  7, iter:  41,500, lr:(1.000e-04,)] [eta: 15:19:47, time (data): 1.404 (0.007)] l_g_pix: 5.0277e-02 l_g_percep: 1.0760e+01 l_g_gan: 1.8268e-01 l_g_edge: 7.9057e-02 l_g_flat: 7.5206e-03 l_d_real: 5.1966e-01 out_d_real: 2.0970e+00 l_d_fake: 2.8930e-01 out_d_fake: -1.5366e+00 
+2025-05-16 01:50:06,604 INFO: [train..][epoch:  7, iter:  41,600, lr:(1.000e-04,)] [eta: 15:17:12, time (data): 1.410 (0.007)] l_g_pix: 5.2699e-02 l_g_percep: 1.1113e+01 l_g_gan: 1.5357e-01 l_g_edge: 8.0629e-02 l_g_flat: 6.6075e-03 l_d_real: 3.6359e-01 out_d_real: 3.9225e+00 l_d_fake: 3.9372e-01 out_d_fake: -1.1419e+00 
+2025-05-16 01:52:28,057 INFO: [train..][epoch:  7, iter:  41,700, lr:(1.000e-04,)] [eta: 15:14:38, time (data): 1.419 (0.008)] l_g_pix: 4.9151e-02 l_g_percep: 1.0953e+01 l_g_gan: 1.5695e-01 l_g_edge: 8.0294e-02 l_g_flat: 6.5912e-03 l_d_real: 3.5194e-01 out_d_real: 3.7695e+00 l_d_fake: 3.9905e-01 out_d_fake: -1.1700e+00 
+2025-05-16 01:54:48,963 INFO: [train..][epoch:  7, iter:  41,800, lr:(1.000e-04,)] [eta: 15:12:01, time (data): 1.413 (0.007)] l_g_pix: 4.9895e-02 l_g_percep: 1.0676e+01 l_g_gan: 1.7389e-01 l_g_edge: 7.8124e-02 l_g_flat: 5.7456e-03 l_d_real: 3.8623e-01 out_d_real: 3.7725e+00 l_d_fake: 2.9837e-01 out_d_fake: -1.4404e+00 
+2025-05-16 01:57:09,270 INFO: [train..][epoch:  7, iter:  41,900, lr:(1.000e-04,)] [eta: 15:09:22, time (data): 1.403 (0.007)] l_g_pix: 5.8166e-02 l_g_percep: 1.1368e+01 l_g_gan: 1.7346e-01 l_g_edge: 9.1642e-02 l_g_flat: 7.4556e-03 l_d_real: 4.3560e-01 out_d_real: 3.5115e+00 l_d_fake: 3.6846e-01 out_d_fake: -1.3657e+00 
+2025-05-16 01:59:29,912 INFO: [train..][epoch:  7, iter:  42,000, lr:(1.000e-04,)] [eta: 15:06:45, time (data): 1.405 (0.006)] l_g_pix: 4.9914e-02 l_g_percep: 1.0336e+01 l_g_gan: 1.8165e-01 l_g_edge: 7.6304e-02 l_g_flat: 4.0525e-03 l_d_real: 3.5276e-01 out_d_real: 4.8304e+00 l_d_fake: 3.0503e-01 out_d_fake: -1.5113e+00 
+2025-05-16 02:01:51,272 INFO: [train..][epoch:  7, iter:  42,100, lr:(1.000e-04,)] [eta: 15:04:12, time (data): 1.408 (0.006)] l_g_pix: 6.1741e-02 l_g_percep: 1.2306e+01 l_g_gan: 1.7980e-01 l_g_edge: 9.2254e-02 l_g_flat: 9.0088e-03 l_d_real: 3.6604e-01 out_d_real: 3.9099e+00 l_d_fake: 3.3613e-01 out_d_fake: -1.4606e+00 
+2025-05-16 02:04:12,401 INFO: [train..][epoch:  7, iter:  42,200, lr:(1.000e-04,)] [eta: 15:01:38, time (data): 1.410 (0.006)] l_g_pix: 5.5966e-02 l_g_percep: 1.2120e+01 l_g_gan: 1.8487e-01 l_g_edge: 8.4791e-02 l_g_flat: 9.5193e-03 l_d_real: 3.8250e-01 out_d_real: 2.8055e+00 l_d_fake: 3.3950e-01 out_d_fake: -1.5087e+00 
+2025-05-16 02:06:33,465 INFO: [train..][epoch:  7, iter:  42,300, lr:(1.000e-04,)] [eta: 14:59:04, time (data): 1.405 (0.008)] l_g_pix: 6.1252e-02 l_g_percep: 1.2246e+01 l_g_gan: 1.7430e-01 l_g_edge: 1.0129e-01 l_g_flat: 7.5899e-03 l_d_real: 3.5359e-01 out_d_real: 3.9421e+00 l_d_fake: 3.2579e-01 out_d_fake: -1.4165e+00 
+2025-05-16 02:08:54,090 INFO: [train..][epoch:  7, iter:  42,400, lr:(1.000e-04,)] [eta: 14:56:29, time (data): 1.406 (0.006)] l_g_pix: 3.7192e-02 l_g_percep: 7.9596e+00 l_g_gan: 2.1487e-01 l_g_edge: 5.0256e-02 l_g_flat: 4.4902e-03 l_d_real: 5.7627e-01 out_d_real: 4.5018e+00 l_d_fake: 1.8133e-01 out_d_fake: -1.9663e+00 
+2025-05-16 02:11:14,921 INFO: [train..][epoch:  7, iter:  42,500, lr:(1.000e-04,)] [eta: 14:53:55, time (data): 1.412 (0.006)] l_g_pix: 6.2300e-02 l_g_percep: 1.2228e+01 l_g_gan: 1.7943e-01 l_g_edge: 9.7509e-02 l_g_flat: 7.2488e-03 l_d_real: 3.6617e-01 out_d_real: 4.9499e+00 l_d_fake: 3.8243e-01 out_d_fake: -1.4114e+00 
+2025-05-16 02:13:35,767 INFO: [train..][epoch:  7, iter:  42,600, lr:(1.000e-04,)] [eta: 14:51:21, time (data): 1.410 (0.007)] l_g_pix: 3.3998e-02 l_g_percep: 8.5909e+00 l_g_gan: 1.3462e-01 l_g_edge: 5.0051e-02 l_g_flat: 5.5817e-03 l_d_real: 3.2219e-01 out_d_real: 3.0786e+00 l_d_fake: 5.1877e-01 out_d_fake: -8.2650e-01 
+2025-05-16 02:15:57,859 INFO: [train..][epoch:  7, iter:  42,700, lr:(1.000e-04,)] [eta: 14:48:53, time (data): 1.414 (0.007)] l_g_pix: 4.3095e-02 l_g_percep: 9.0026e+00 l_g_gan: 1.8241e-01 l_g_edge: 6.2353e-02 l_g_flat: 7.5806e-03 l_d_real: 6.2275e-01 out_d_real: 1.5683e+00 l_d_fake: 3.0192e-01 out_d_fake: -1.5211e+00 
+2025-05-16 02:18:19,320 INFO: [train..][epoch:  7, iter:  42,800, lr:(1.000e-04,)] [eta: 14:46:23, time (data): 1.414 (0.007)] l_g_pix: 6.2531e-02 l_g_percep: 1.1996e+01 l_g_gan: 2.0323e-01 l_g_edge: 9.4956e-02 l_g_flat: 8.0162e-03 l_d_real: 5.0615e-01 out_d_real: 2.7361e+00 l_d_fake: 2.1559e-01 out_d_fake: -1.8158e+00 
+2025-05-16 02:20:39,945 INFO: [train..][epoch:  7, iter:  42,900, lr:(1.000e-04,)] [eta: 14:43:49, time (data): 1.403 (0.009)] l_g_pix: 5.1454e-02 l_g_percep: 1.0819e+01 l_g_gan: 1.7649e-01 l_g_edge: 7.3482e-02 l_g_flat: 6.8439e-03 l_d_real: 3.8019e-01 out_d_real: 3.1729e+00 l_d_fake: 3.5948e-01 out_d_fake: -1.4049e+00 
+2025-05-16 02:23:00,081 INFO: [train..][epoch:  7, iter:  43,000, lr:(1.000e-04,)] [eta: 14:41:13, time (data): 1.402 (0.008)] l_g_pix: 5.8311e-02 l_g_percep: 1.0843e+01 l_g_gan: 1.6982e-01 l_g_edge: 7.4500e-02 l_g_flat: 7.8500e-03 l_d_real: 4.9497e-01 out_d_real: 2.7593e+00 l_d_fake: 3.1766e-01 out_d_fake: -1.3805e+00 
+2025-05-16 02:25:20,706 INFO: [train..][epoch:  7, iter:  43,100, lr:(1.000e-04,)] [eta: 14:38:40, time (data): 1.410 (0.005)] l_g_pix: 5.9380e-02 l_g_percep: 1.1571e+01 l_g_gan: 1.7741e-01 l_g_edge: 9.5627e-02 l_g_flat: 7.0929e-03 l_d_real: 3.4028e-01 out_d_real: 3.2003e+00 l_d_fake: 3.6098e-01 out_d_fake: -1.4124e+00 
+2025-05-16 02:27:42,086 INFO: [train..][epoch:  7, iter:  43,200, lr:(1.000e-04,)] [eta: 14:36:10, time (data): 1.412 (0.006)] l_g_pix: 4.0593e-02 l_g_percep: 9.7617e+00 l_g_gan: 1.6452e-01 l_g_edge: 6.2805e-02 l_g_flat: 4.4263e-03 l_d_real: 3.0011e-01 out_d_real: 5.1804e+00 l_d_fake: 3.7152e-01 out_d_fake: -1.2734e+00 
+2025-05-16 02:30:02,609 INFO: [train..][epoch:  7, iter:  43,300, lr:(1.000e-04,)] [eta: 14:33:37, time (data): 1.399 (0.007)] l_g_pix: 5.0510e-02 l_g_percep: 1.0001e+01 l_g_gan: 1.4403e-01 l_g_edge: 7.5283e-02 l_g_flat: 6.7217e-03 l_d_real: 4.5997e-01 out_d_real: 3.9408e+00 l_d_fake: 4.3735e-01 out_d_fake: -1.0024e+00 
+2025-05-16 02:32:23,716 INFO: [train..][epoch:  7, iter:  43,400, lr:(1.000e-04,)] [eta: 14:31:07, time (data): 1.407 (0.008)] l_g_pix: 4.0710e-02 l_g_percep: 1.0189e+01 l_g_gan: 1.8700e-01 l_g_edge: 6.0393e-02 l_g_flat: 6.0711e-03 l_d_real: 5.5020e-01 out_d_real: 2.7952e+00 l_d_fake: 2.9555e-01 out_d_fake: -1.5742e+00 
+2025-05-16 02:34:44,698 INFO: [train..][epoch:  7, iter:  43,500, lr:(1.000e-04,)] [eta: 14:28:36, time (data): 1.409 (0.006)] l_g_pix: 5.1849e-02 l_g_percep: 1.1147e+01 l_g_gan: 1.4667e-01 l_g_edge: 7.7568e-02 l_g_flat: 5.4319e-03 l_d_real: 4.0712e-01 out_d_real: 3.7706e+00 l_d_fake: 3.9338e-01 out_d_fake: -1.0728e+00 
+2025-05-16 02:37:05,812 INFO: [train..][epoch:  7, iter:  43,600, lr:(1.000e-04,)] [eta: 14:26:06, time (data): 1.410 (0.006)] l_g_pix: 6.0266e-02 l_g_percep: 1.2716e+01 l_g_gan: 2.1422e-01 l_g_edge: 9.3403e-02 l_g_flat: 7.4820e-03 l_d_real: 6.4423e-01 out_d_real: 2.4208e+00 l_d_fake: 2.1675e-01 out_d_fake: -1.9248e+00 
+2025-05-16 02:39:26,070 INFO: [train..][epoch:  7, iter:  43,700, lr:(1.000e-04,)] [eta: 14:23:33, time (data): 1.399 (0.007)] l_g_pix: 4.5137e-02 l_g_percep: 1.0836e+01 l_g_gan: 1.9806e-01 l_g_edge: 6.9325e-02 l_g_flat: 5.4241e-03 l_d_real: 4.6115e-01 out_d_real: 3.3538e+00 l_d_fake: 2.4756e-01 out_d_fake: -1.7329e+00 
+2025-05-16 02:41:47,966 INFO: [train..][epoch:  7, iter:  43,800, lr:(1.000e-04,)] [eta: 14:21:07, time (data): 1.412 (0.007)] l_g_pix: 4.6641e-02 l_g_percep: 9.5729e+00 l_g_gan: 1.8618e-01 l_g_edge: 6.6860e-02 l_g_flat: 6.9152e-03 l_d_real: 4.7203e-01 out_d_real: 2.4333e+00 l_d_fake: 3.1848e-01 out_d_fake: -1.5423e+00 
+2025-05-16 02:44:08,639 INFO: [train..][epoch:  7, iter:  43,900, lr:(1.000e-04,)] [eta: 14:18:36, time (data): 1.407 (0.008)] l_g_pix: 5.1149e-02 l_g_percep: 1.1828e+01 l_g_gan: 1.8696e-01 l_g_edge: 7.7598e-02 l_g_flat: 6.6510e-03 l_d_real: 5.8596e-01 out_d_real: 2.2157e+00 l_d_fake: 3.1026e-01 out_d_fake: -1.5589e+00 
+2025-05-16 02:46:28,968 INFO: [train..][epoch:  7, iter:  44,000, lr:(1.000e-04,)] [eta: 14:16:03, time (data): 1.405 (0.007)] l_g_pix: 6.2856e-02 l_g_percep: 1.3324e+01 l_g_gan: 1.6513e-01 l_g_edge: 1.0603e-01 l_g_flat: 7.0716e-03 l_d_real: 2.4877e-01 out_d_real: 5.0843e+00 l_d_fake: 3.6092e-01 out_d_fake: -1.2896e+00 
+2025-05-16 02:48:49,441 INFO: [train..][epoch:  7, iter:  44,100, lr:(1.000e-04,)] [eta: 14:13:32, time (data): 1.403 (0.008)] l_g_pix: 6.2666e-02 l_g_percep: 1.2889e+01 l_g_gan: 1.9911e-01 l_g_edge: 9.3977e-02 l_g_flat: 6.7753e-03 l_d_real: 4.0183e-01 out_d_real: 3.2458e+00 l_d_fake: 2.5834e-01 out_d_fake: -1.7321e+00 
+2025-05-16 02:51:11,097 INFO: [train..][epoch:  7, iter:  44,200, lr:(1.000e-04,)] [eta: 14:11:06, time (data): 1.412 (0.007)] l_g_pix: 5.3133e-02 l_g_percep: 1.0841e+01 l_g_gan: 1.6277e-01 l_g_edge: 8.5325e-02 l_g_flat: 6.8431e-03 l_d_real: 4.3819e-01 out_d_real: 4.4128e+00 l_d_fake: 3.9127e-01 out_d_fake: -1.2364e+00 
+2025-05-16 02:53:32,697 INFO: [train..][epoch:  7, iter:  44,300, lr:(1.000e-04,)] [eta: 14:08:39, time (data): 1.409 (0.010)] l_g_pix: 3.7098e-02 l_g_percep: 9.2705e+00 l_g_gan: 1.4942e-01 l_g_edge: 5.4183e-02 l_g_flat: 6.3140e-03 l_d_real: 4.8794e-01 out_d_real: 1.6247e+00 l_d_fake: 4.0808e-01 out_d_fake: -1.0856e+00 
+2025-05-16 02:55:54,332 INFO: [train..][epoch:  7, iter:  44,400, lr:(1.000e-04,)] [eta: 14:06:12, time (data): 1.414 (0.007)] l_g_pix: 5.3438e-02 l_g_percep: 1.0607e+01 l_g_gan: 1.8047e-01 l_g_edge: 7.8119e-02 l_g_flat: 4.6357e-03 l_d_real: 5.5192e-01 out_d_real: 4.2158e+00 l_d_fake: 3.0428e-01 out_d_fake: -1.4996e+00 
+2025-05-16 02:58:14,666 INFO: [train..][epoch:  7, iter:  44,500, lr:(1.000e-04,)] [eta: 14:03:41, time (data): 1.403 (0.008)] l_g_pix: 5.7843e-02 l_g_percep: 1.2507e+01 l_g_gan: 1.5510e-01 l_g_edge: 8.8471e-02 l_g_flat: 6.6474e-03 l_d_real: 3.0353e-01 out_d_real: 3.7494e+00 l_d_fake: 3.8601e-01 out_d_fake: -1.1647e+00 
+2025-05-16 03:00:35,124 INFO: [train..][epoch:  7, iter:  44,600, lr:(1.000e-04,)] [eta: 14:01:11, time (data): 1.404 (0.008)] l_g_pix: 6.4072e-02 l_g_percep: 1.3244e+01 l_g_gan: 1.9977e-01 l_g_edge: 9.3176e-02 l_g_flat: 6.4451e-03 l_d_real: 4.3670e-01 out_d_real: 2.9583e+00 l_d_fake: 2.2332e-01 out_d_fake: -1.7740e+00 
+2025-05-16 03:02:56,513 INFO: [train..][epoch:  7, iter:  44,700, lr:(1.000e-04,)] [eta: 13:58:44, time (data): 1.403 (0.007)] l_g_pix: 5.4983e-02 l_g_percep: 1.0914e+01 l_g_gan: 1.5104e-01 l_g_edge: 8.8545e-02 l_g_flat: 5.6484e-03 l_d_real: 2.2889e-01 out_d_real: 4.7026e+00 l_d_fake: 4.0915e-01 out_d_fake: -1.0990e+00 
+2025-05-16 03:05:18,959 INFO: [train..][epoch:  7, iter:  44,800, lr:(1.000e-04,)] [eta: 13:56:21, time (data): 1.417 (0.007)] l_g_pix: 4.4002e-02 l_g_percep: 9.3666e+00 l_g_gan: 2.0841e-01 l_g_edge: 6.6727e-02 l_g_flat: 7.3194e-03 l_d_real: 6.5963e-01 out_d_real: 2.2068e+00 l_d_fake: 2.9916e-01 out_d_fake: -1.7832e+00 
+2025-05-16 03:07:39,287 INFO: [train..][epoch:  7, iter:  44,900, lr:(1.000e-04,)] [eta: 13:53:50, time (data): 1.406 (0.007)] l_g_pix: 5.6697e-02 l_g_percep: 1.1435e+01 l_g_gan: 1.9723e-01 l_g_edge: 8.1647e-02 l_g_flat: 6.0327e-03 l_d_real: 3.8588e-01 out_d_real: 3.4388e+00 l_d_fake: 2.4145e-01 out_d_fake: -1.7299e+00 
+2025-05-16 03:10:00,420 INFO: [train..][epoch:  7, iter:  45,000, lr:(1.000e-04,)] [eta: 13:51:23, time (data): 1.409 (0.006)] l_g_pix: 6.5862e-02 l_g_percep: 1.2881e+01 l_g_gan: 1.9312e-01 l_g_edge: 9.7748e-02 l_g_flat: 8.2109e-03 l_d_real: 4.3195e-01 out_d_real: 4.1955e+00 l_d_fake: 2.7860e-01 out_d_fake: -1.6519e+00 
+2025-05-16 03:10:00,420 INFO: Saving models and training states.
+2025-05-16 03:12:22,451 INFO: [train..][epoch:  7, iter:  45,100, lr:(1.000e-04,)] [eta: 13:48:59, time (data): 1.414 (0.006)] l_g_pix: 3.8160e-02 l_g_percep: 9.3607e+00 l_g_gan: 1.7576e-01 l_g_edge: 5.9498e-02 l_g_flat: 5.8318e-03 l_d_real: 3.7612e-01 out_d_real: 4.4174e+00 l_d_fake: 3.1193e-01 out_d_fake: -1.4451e+00 
+2025-05-16 03:14:43,950 INFO: [train..][epoch:  7, iter:  45,200, lr:(1.000e-04,)] [eta: 13:46:33, time (data): 1.415 (0.007)] l_g_pix: 6.4938e-02 l_g_percep: 1.3112e+01 l_g_gan: 2.1682e-01 l_g_edge: 1.0367e-01 l_g_flat: 6.4064e-03 l_d_real: 3.6067e-01 out_d_real: 3.9809e+00 l_d_fake: 2.8303e-01 out_d_fake: -1.8815e+00 
+2025-05-16 03:17:06,905 INFO: [train..][epoch:  7, iter:  45,300, lr:(1.000e-04,)] [eta: 13:44:12, time (data): 1.429 (0.005)] l_g_pix: 4.9192e-02 l_g_percep: 9.3817e+00 l_g_gan: 1.2449e-01 l_g_edge: 6.7591e-02 l_g_flat: 5.0160e-03 l_d_real: 3.4475e-01 out_d_real: 3.2986e+00 l_d_fake: 4.6982e-01 out_d_fake: -7.7522e-01 
+2025-05-16 03:19:27,722 INFO: [train..][epoch:  7, iter:  45,400, lr:(1.000e-04,)] [eta: 13:41:43, time (data): 1.415 (0.005)] l_g_pix: 5.6914e-02 l_g_percep: 1.2024e+01 l_g_gan: 1.6772e-01 l_g_edge: 9.6250e-02 l_g_flat: 6.2648e-03 l_d_real: 3.6748e-01 out_d_real: 3.6381e+00 l_d_fake: 3.3209e-01 out_d_fake: -1.3445e+00 
+2025-05-16 03:22:31,858 INFO: [train..][epoch:  8, iter:  45,500, lr:(1.000e-04,)] [eta: 13:41:38, time (data): 2.309 (0.899)] l_g_pix: 5.2395e-02 l_g_percep: 1.0175e+01 l_g_gan: 1.5590e-01 l_g_edge: 7.9228e-02 l_g_flat: 5.8629e-03 l_d_real: 3.4853e-01 out_d_real: 5.1569e+00 l_d_fake: 4.0158e-01 out_d_fake: -1.1572e+00 
+2025-05-16 03:24:51,754 INFO: [train..][epoch:  8, iter:  45,600, lr:(1.000e-04,)] [eta: 13:39:05, time (data): 1.694 (0.296)] l_g_pix: 5.9085e-02 l_g_percep: 1.2223e+01 l_g_gan: 1.4752e-01 l_g_edge: 9.2982e-02 l_g_flat: 7.0084e-03 l_d_real: 2.1232e-01 out_d_real: 4.6387e+00 l_d_fake: 4.5018e-01 out_d_fake: -1.0249e+00 
+2025-05-16 03:27:11,967 INFO: [train..][epoch:  8, iter:  45,700, lr:(1.000e-04,)] [eta: 13:36:34, time (data): 1.395 (0.007)] l_g_pix: 4.0699e-02 l_g_percep: 8.9778e+00 l_g_gan: 1.7697e-01 l_g_edge: 6.5533e-02 l_g_flat: 6.3276e-03 l_d_real: 3.9097e-01 out_d_real: 4.1259e+00 l_d_fake: 3.2080e-01 out_d_fake: -1.4482e+00 
+2025-05-16 03:29:32,216 INFO: [train..][epoch:  8, iter:  45,800, lr:(1.000e-04,)] [eta: 13:34:03, time (data): 1.400 (0.006)] l_g_pix: 4.1315e-02 l_g_percep: 9.8214e+00 l_g_gan: 1.8429e-01 l_g_edge: 6.9187e-02 l_g_flat: 7.2899e-03 l_d_real: 4.4751e-01 out_d_real: 2.5330e+00 l_d_fake: 2.8498e-01 out_d_fake: -1.5578e+00 
+2025-05-16 03:31:52,355 INFO: [train..][epoch:  8, iter:  45,900, lr:(1.000e-04,)] [eta: 13:31:31, time (data): 1.399 (0.005)] l_g_pix: 5.1820e-02 l_g_percep: 1.1193e+01 l_g_gan: 2.0245e-01 l_g_edge: 8.8329e-02 l_g_flat: 5.6337e-03 l_d_real: 2.7669e-01 out_d_real: 4.6617e+00 l_d_fake: 2.8500e-01 out_d_fake: -1.7366e+00 
+2025-05-16 03:34:12,302 INFO: [train..][epoch:  8, iter:  46,000, lr:(1.000e-04,)] [eta: 13:29:00, time (data): 1.399 (0.006)] l_g_pix: 4.3306e-02 l_g_percep: 9.2898e+00 l_g_gan: 1.7254e-01 l_g_edge: 6.2056e-02 l_g_flat: 6.5792e-03 l_d_real: 4.7725e-01 out_d_real: 2.4711e+00 l_d_fake: 3.6953e-01 out_d_fake: -1.3549e+00 
+2025-05-16 03:36:33,392 INFO: [train..][epoch:  8, iter:  46,100, lr:(1.000e-04,)] [eta: 13:26:32, time (data): 1.424 (0.008)] l_g_pix: 5.9008e-02 l_g_percep: 1.0345e+01 l_g_gan: 1.7418e-01 l_g_edge: 7.1828e-02 l_g_flat: 6.7036e-03 l_d_real: 4.5823e-01 out_d_real: 2.8398e+00 l_d_fake: 2.8273e-01 out_d_fake: -1.4587e+00 
+2025-05-16 03:38:54,422 INFO: [train..][epoch:  8, iter:  46,200, lr:(1.000e-04,)] [eta: 13:24:04, time (data): 1.415 (0.008)] l_g_pix: 4.7708e-02 l_g_percep: 9.9938e+00 l_g_gan: 1.5851e-01 l_g_edge: 7.7264e-02 l_g_flat: 3.7420e-03 l_d_real: 2.5043e-01 out_d_real: 5.0592e+00 l_d_fake: 3.5840e-01 out_d_fake: -1.2257e+00 
+2025-05-16 03:41:14,840 INFO: [train..][epoch:  8, iter:  46,300, lr:(1.000e-04,)] [eta: 13:21:34, time (data): 1.410 (0.005)] l_g_pix: 4.1552e-02 l_g_percep: 1.0114e+01 l_g_gan: 1.9032e-01 l_g_edge: 6.5010e-02 l_g_flat: 5.6574e-03 l_d_real: 4.9078e-01 out_d_real: 2.7789e+00 l_d_fake: 3.1188e-01 out_d_fake: -1.5892e+00 
+2025-05-16 03:43:35,447 INFO: [train..][epoch:  8, iter:  46,400, lr:(1.000e-04,)] [eta: 13:19:05, time (data): 1.407 (0.007)] l_g_pix: 5.3521e-02 l_g_percep: 1.1668e+01 l_g_gan: 1.4459e-01 l_g_edge: 9.2459e-02 l_g_flat: 6.8780e-03 l_d_real: 2.5264e-01 out_d_real: 4.3641e+00 l_d_fake: 4.6669e-01 out_d_fake: -9.7914e-01 
+2025-05-16 03:45:55,560 INFO: [train..][epoch:  8, iter:  46,500, lr:(1.000e-04,)] [eta: 13:16:35, time (data): 1.403 (0.004)] l_g_pix: 3.5232e-02 l_g_percep: 8.0937e+00 l_g_gan: 1.6577e-01 l_g_edge: 4.8900e-02 l_g_flat: 5.2158e-03 l_d_real: 4.5319e-01 out_d_real: 3.2709e+00 l_d_fake: 3.0011e-01 out_d_fake: -1.3572e+00 
+2025-05-16 03:48:16,378 INFO: [train..][epoch:  8, iter:  46,600, lr:(1.000e-04,)] [eta: 13:14:07, time (data): 1.407 (0.006)] l_g_pix: 4.6637e-02 l_g_percep: 9.9410e+00 l_g_gan: 1.9631e-01 l_g_edge: 7.1813e-02 l_g_flat: 6.3219e-03 l_d_real: 6.5293e-01 out_d_real: 2.1861e+00 l_d_fake: 3.0790e-01 out_d_fake: -1.6550e+00 
+2025-05-16 03:50:37,140 INFO: [train..][epoch:  8, iter:  46,700, lr:(1.000e-04,)] [eta: 13:11:39, time (data): 1.402 (0.008)] l_g_pix: 6.1765e-02 l_g_percep: 1.2137e+01 l_g_gan: 1.2052e-01 l_g_edge: 9.8192e-02 l_g_flat: 4.8950e-03 l_d_real: 1.1488e-01 out_d_real: 8.0363e+00 l_d_fake: 5.6821e-01 out_d_fake: -6.3676e-01 
+2025-05-16 03:52:58,428 INFO: [train..][epoch:  8, iter:  46,800, lr:(1.000e-04,)] [eta: 13:09:13, time (data): 1.410 (0.008)] l_g_pix: 4.3917e-02 l_g_percep: 9.0712e+00 l_g_gan: 1.8897e-01 l_g_edge: 6.2665e-02 l_g_flat: 5.6011e-03 l_d_real: 7.0760e-01 out_d_real: 1.6087e+00 l_d_fake: 3.2698e-01 out_d_fake: -1.5622e+00 
+2025-05-16 03:55:19,583 INFO: [train..][epoch:  8, iter:  46,900, lr:(1.000e-04,)] [eta: 13:06:46, time (data): 1.412 (0.007)] l_g_pix: 6.7191e-02 l_g_percep: 1.3392e+01 l_g_gan: 1.4888e-01 l_g_edge: 1.0150e-01 l_g_flat: 7.5417e-03 l_d_real: 2.0368e-01 out_d_real: 4.9100e+00 l_d_fake: 4.9076e-01 out_d_fake: -9.9753e-01 
+2025-05-16 03:57:40,842 INFO: [train..][epoch:  8, iter:  47,000, lr:(1.000e-04,)] [eta: 13:04:19, time (data): 1.412 (0.006)] l_g_pix: 5.2547e-02 l_g_percep: 1.0887e+01 l_g_gan: 2.1221e-01 l_g_edge: 8.4309e-02 l_g_flat: 5.7773e-03 l_d_real: 3.5279e-01 out_d_real: 4.9601e+00 l_d_fake: 2.1342e-01 out_d_fake: -1.9083e+00 
+2025-05-16 04:00:02,441 INFO: [train..][epoch:  8, iter:  47,100, lr:(1.000e-04,)] [eta: 13:01:54, time (data): 1.414 (0.005)] l_g_pix: 4.1768e-02 l_g_percep: 9.8103e+00 l_g_gan: 2.0680e-01 l_g_edge: 5.9788e-02 l_g_flat: 5.3134e-03 l_d_real: 3.8968e-01 out_d_real: 4.8527e+00 l_d_fake: 2.1998e-01 out_d_fake: -1.8469e+00 
+2025-05-16 04:02:23,193 INFO: [train..][epoch:  8, iter:  47,200, lr:(1.000e-04,)] [eta: 12:59:27, time (data): 1.409 (0.006)] l_g_pix: 5.0502e-02 l_g_percep: 1.0834e+01 l_g_gan: 1.9907e-01 l_g_edge: 7.9267e-02 l_g_flat: 4.8725e-03 l_d_real: 4.3670e-01 out_d_real: 3.6624e+00 l_d_fake: 2.9358e-01 out_d_fake: -1.6959e+00 
+2025-05-16 04:04:42,650 INFO: [train..][epoch:  8, iter:  47,300, lr:(1.000e-04,)] [eta: 12:56:56, time (data): 1.391 (0.004)] l_g_pix: 5.4251e-02 l_g_percep: 1.1618e+01 l_g_gan: 1.9276e-01 l_g_edge: 8.3620e-02 l_g_flat: 5.7319e-03 l_d_real: 4.2816e-01 out_d_real: 4.8498e+00 l_d_fake: 2.4230e-01 out_d_fake: -1.6848e+00 
+2025-05-16 04:07:05,077 INFO: [train..][epoch:  8, iter:  47,400, lr:(1.000e-04,)] [eta: 12:54:33, time (data): 1.415 (0.007)] l_g_pix: 5.0353e-02 l_g_percep: 1.0478e+01 l_g_gan: 1.7204e-01 l_g_edge: 7.7410e-02 l_g_flat: 6.5331e-03 l_d_real: 3.4917e-01 out_d_real: 5.1999e+00 l_d_fake: 3.6612e-01 out_d_fake: -1.3530e+00 
+2025-05-16 04:09:24,794 INFO: [train..][epoch:  8, iter:  47,500, lr:(1.000e-04,)] [eta: 12:52:03, time (data): 1.395 (0.006)] l_g_pix: 2.9899e-02 l_g_percep: 8.1342e+00 l_g_gan: 1.7133e-01 l_g_edge: 4.4815e-02 l_g_flat: 4.7238e-03 l_d_real: 3.8868e-01 out_d_real: 3.5804e+00 l_d_fake: 3.0565e-01 out_d_fake: -1.4072e+00 
+2025-05-16 04:11:45,938 INFO: [train..][epoch:  8, iter:  47,600, lr:(1.000e-04,)] [eta: 12:49:37, time (data): 1.407 (0.007)] l_g_pix: 5.8301e-02 l_g_percep: 1.1831e+01 l_g_gan: 1.7736e-01 l_g_edge: 9.1602e-02 l_g_flat: 6.4764e-03 l_d_real: 4.1851e-01 out_d_real: 3.9159e+00 l_d_fake: 3.3090e-01 out_d_fake: -1.4422e+00 
+2025-05-16 04:14:06,450 INFO: [train..][epoch:  8, iter:  47,700, lr:(1.000e-04,)] [eta: 12:47:09, time (data): 1.403 (0.006)] l_g_pix: 3.8292e-02 l_g_percep: 8.8480e+00 l_g_gan: 2.1126e-01 l_g_edge: 5.6636e-02 l_g_flat: 5.2908e-03 l_d_real: 6.3668e-01 out_d_real: 2.2192e+00 l_d_fake: 1.9993e-01 out_d_fake: -1.9113e+00 
+2025-05-16 04:16:27,985 INFO: [train..][epoch:  8, iter:  47,800, lr:(1.000e-04,)] [eta: 12:44:44, time (data): 1.412 (0.006)] l_g_pix: 4.6291e-02 l_g_percep: 9.6782e+00 l_g_gan: 1.7846e-01 l_g_edge: 6.5931e-02 l_g_flat: 5.8355e-03 l_d_real: 2.9489e-01 out_d_real: 4.5799e+00 l_d_fake: 3.2158e-01 out_d_fake: -1.4622e+00 
+2025-05-16 04:18:49,889 INFO: [train..][epoch:  8, iter:  47,900, lr:(1.000e-04,)] [eta: 12:42:20, time (data): 1.419 (0.005)] l_g_pix: 5.4335e-02 l_g_percep: 1.0836e+01 l_g_gan: 2.3049e-01 l_g_edge: 7.8052e-02 l_g_flat: 5.8879e-03 l_d_real: 5.6552e-01 out_d_real: 3.4394e+00 l_d_fake: 1.6376e-01 out_d_fake: -2.1398e+00 
+2025-05-16 04:21:10,335 INFO: [train..][epoch:  8, iter:  48,000, lr:(1.000e-04,)] [eta: 12:39:52, time (data): 1.408 (0.005)] l_g_pix: 4.0945e-02 l_g_percep: 9.6818e+00 l_g_gan: 1.8683e-01 l_g_edge: 6.1641e-02 l_g_flat: 3.3515e-03 l_d_real: 3.1603e-01 out_d_real: 5.2761e+00 l_d_fake: 2.8297e-01 out_d_fake: -1.5849e+00 
+2025-05-16 04:23:30,474 INFO: [train..][epoch:  8, iter:  48,100, lr:(1.000e-04,)] [eta: 12:37:24, time (data): 1.402 (0.005)] l_g_pix: 5.3449e-02 l_g_percep: 1.0959e+01 l_g_gan: 1.9323e-01 l_g_edge: 7.3959e-02 l_g_flat: 5.0950e-03 l_d_real: 4.7494e-01 out_d_real: 3.6868e+00 l_d_fake: 2.4981e-01 out_d_fake: -1.6816e+00 
+2025-05-16 04:25:51,968 INFO: [train..][epoch:  8, iter:  48,200, lr:(1.000e-04,)] [eta: 12:34:59, time (data): 1.412 (0.006)] l_g_pix: 6.6702e-02 l_g_percep: 1.2953e+01 l_g_gan: 1.6017e-01 l_g_edge: 1.1218e-01 l_g_flat: 4.9065e-03 l_d_real: 2.6015e-01 out_d_real: 4.5615e+00 l_d_fake: 3.5984e-01 out_d_fake: -1.2406e+00 
+2025-05-16 04:28:11,823 INFO: [train..][epoch:  8, iter:  48,300, lr:(1.000e-04,)] [eta: 12:32:31, time (data): 1.399 (0.006)] l_g_pix: 4.7856e-02 l_g_percep: 7.9169e+00 l_g_gan: 1.7824e-01 l_g_edge: 5.3475e-02 l_g_flat: 3.9078e-03 l_d_real: 5.0608e-01 out_d_real: 3.2877e+00 l_d_fake: 4.2724e-01 out_d_fake: -1.3541e+00 
+2025-05-16 04:30:31,845 INFO: [train..][epoch:  8, iter:  48,400, lr:(1.000e-04,)] [eta: 12:30:03, time (data): 1.400 (0.007)] l_g_pix: 4.4794e-02 l_g_percep: 9.7924e+00 l_g_gan: 1.7990e-01 l_g_edge: 6.7659e-02 l_g_flat: 6.1431e-03 l_d_real: 3.9700e-01 out_d_real: 4.2258e+00 l_d_fake: 3.2936e-01 out_d_fake: -1.4688e+00 
+2025-05-16 04:32:51,715 INFO: [train..][epoch:  8, iter:  48,500, lr:(1.000e-04,)] [eta: 12:27:34, time (data): 1.394 (0.007)] l_g_pix: 4.7237e-02 l_g_percep: 1.0079e+01 l_g_gan: 2.8531e-01 l_g_edge: 7.1388e-02 l_g_flat: 6.7557e-03 l_d_real: 8.9974e-01 out_d_real: 9.2680e-01 l_d_fake: 1.1455e-01 out_d_fake: -2.7351e+00 
+2025-05-16 04:35:12,620 INFO: [train..][epoch:  8, iter:  48,600, lr:(1.000e-04,)] [eta: 12:25:08, time (data): 1.405 (0.007)] l_g_pix: 5.1474e-02 l_g_percep: 1.0650e+01 l_g_gan: 1.8443e-01 l_g_edge: 7.8931e-02 l_g_flat: 6.2072e-03 l_d_real: 4.3973e-01 out_d_real: 2.8332e+00 l_d_fake: 3.1929e-01 out_d_fake: -1.5245e+00 
+2025-05-16 04:37:32,686 INFO: [train..][epoch:  8, iter:  48,700, lr:(1.000e-04,)] [eta: 12:22:41, time (data): 1.392 (0.010)] l_g_pix: 5.1406e-02 l_g_percep: 1.0084e+01 l_g_gan: 1.6821e-01 l_g_edge: 7.9440e-02 l_g_flat: 4.8776e-03 l_d_real: 3.1823e-01 out_d_real: 4.6850e+00 l_d_fake: 4.0795e-01 out_d_fake: -1.2740e+00 
+2025-05-16 04:39:53,315 INFO: [train..][epoch:  8, iter:  48,800, lr:(1.000e-04,)] [eta: 12:20:14, time (data): 1.403 (0.007)] l_g_pix: 3.8283e-02 l_g_percep: 8.0077e+00 l_g_gan: 1.6524e-01 l_g_edge: 5.2567e-02 l_g_flat: 6.1359e-03 l_d_real: 4.3217e-01 out_d_real: 3.7820e+00 l_d_fake: 3.8941e-01 out_d_fake: -1.2618e+00 
+2025-05-16 04:42:14,995 INFO: [train..][epoch:  8, iter:  48,900, lr:(1.000e-04,)] [eta: 12:17:51, time (data): 1.432 (0.003)] l_g_pix: 3.9048e-02 l_g_percep: 8.6861e+00 l_g_gan: 1.7719e-01 l_g_edge: 5.6855e-02 l_g_flat: 7.2979e-03 l_d_real: 6.2894e-01 out_d_real: 2.4887e+00 l_d_fake: 3.1498e-01 out_d_fake: -1.4565e+00 
+2025-05-16 04:44:36,377 INFO: [train..][epoch:  8, iter:  49,000, lr:(1.000e-04,)] [eta: 12:15:26, time (data): 1.418 (0.005)] l_g_pix: 3.5893e-02 l_g_percep: 8.4794e+00 l_g_gan: 1.7446e-01 l_g_edge: 5.2077e-02 l_g_flat: 5.2350e-03 l_d_real: 4.8600e-01 out_d_real: 2.5860e+00 l_d_fake: 2.8885e-01 out_d_fake: -1.4553e+00 
+2025-05-16 04:46:57,160 INFO: [train..][epoch:  8, iter:  49,100, lr:(1.000e-04,)] [eta: 12:13:00, time (data): 1.412 (0.009)] l_g_pix: 6.0672e-02 l_g_percep: 1.3137e+01 l_g_gan: 1.6688e-01 l_g_edge: 1.0312e-01 l_g_flat: 7.8332e-03 l_d_real: 1.9407e-01 out_d_real: 5.6738e+00 l_d_fake: 4.4723e-01 out_d_fake: -1.2215e+00 
+2025-05-16 04:49:18,501 INFO: [train..][epoch:  8, iter:  49,200, lr:(1.000e-04,)] [eta: 12:10:36, time (data): 1.413 (0.008)] l_g_pix: 6.6170e-02 l_g_percep: 1.2959e+01 l_g_gan: 1.8248e-01 l_g_edge: 1.0296e-01 l_g_flat: 6.9451e-03 l_d_real: 3.9344e-01 out_d_real: 3.2361e+00 l_d_fake: 2.8567e-01 out_d_fake: -1.5383e+00 
+2025-05-16 04:51:39,280 INFO: [train..][epoch:  8, iter:  49,300, lr:(1.000e-04,)] [eta: 12:08:10, time (data): 1.396 (0.007)] l_g_pix: 5.7569e-02 l_g_percep: 1.0408e+01 l_g_gan: 2.5612e-01 l_g_edge: 9.1406e-02 l_g_flat: 8.7899e-03 l_d_real: 9.4169e-01 out_d_real: 5.1110e-01 l_d_fake: 1.4289e-01 out_d_fake: -2.4170e+00 
+2025-05-16 04:53:58,541 INFO: [train..][epoch:  8, iter:  49,400, lr:(1.000e-04,)] [eta: 12:05:41, time (data): 1.393 (0.007)] l_g_pix: 4.8940e-02 l_g_percep: 9.8698e+00 l_g_gan: 2.2441e-01 l_g_edge: 6.8695e-02 l_g_flat: 4.6858e-03 l_d_real: 5.0484e-01 out_d_real: 4.2570e+00 l_d_fake: 1.6037e-01 out_d_fake: -2.0830e+00 
+2025-05-16 04:56:18,921 INFO: [train..][epoch:  8, iter:  49,500, lr:(1.000e-04,)] [eta: 12:03:15, time (data): 1.402 (0.005)] l_g_pix: 4.3064e-02 l_g_percep: 9.3924e+00 l_g_gan: 1.6025e-01 l_g_edge: 7.0223e-02 l_g_flat: 4.0269e-03 l_d_real: 2.4419e-01 out_d_real: 5.8406e+00 l_d_fake: 3.6750e-01 out_d_fake: -1.2346e+00 
+2025-05-16 04:58:39,733 INFO: [train..][epoch:  8, iter:  49,600, lr:(1.000e-04,)] [eta: 12:00:50, time (data): 1.407 (0.008)] l_g_pix: 4.9356e-02 l_g_percep: 9.8935e+00 l_g_gan: 1.8498e-01 l_g_edge: 7.7993e-02 l_g_flat: 4.6451e-03 l_d_real: 2.4487e-01 out_d_real: 5.4110e+00 l_d_fake: 4.1093e-01 out_d_fake: -1.4374e+00 
+2025-05-16 05:00:59,690 INFO: [train..][epoch:  8, iter:  49,700, lr:(1.000e-04,)] [eta: 11:58:23, time (data): 1.412 (0.004)] l_g_pix: 4.1500e-02 l_g_percep: 9.1431e+00 l_g_gan: 1.5159e-01 l_g_edge: 6.2305e-02 l_g_flat: 5.7967e-03 l_d_real: 3.1474e-01 out_d_real: 4.5436e+00 l_d_fake: 3.6424e-01 out_d_fake: -1.1515e+00 
+2025-05-16 05:03:20,511 INFO: [train..][epoch:  8, iter:  49,800, lr:(1.000e-04,)] [eta: 11:55:57, time (data): 1.409 (0.006)] l_g_pix: 5.6923e-02 l_g_percep: 1.1525e+01 l_g_gan: 1.7198e-01 l_g_edge: 8.7964e-02 l_g_flat: 7.9405e-03 l_d_real: 4.2332e-01 out_d_real: 3.0836e+00 l_d_fake: 3.8220e-01 out_d_fake: -1.3372e+00 
+2025-05-16 05:05:40,528 INFO: [train..][epoch:  8, iter:  49,900, lr:(1.000e-04,)] [eta: 11:53:31, time (data): 1.403 (0.008)] l_g_pix: 6.1337e-02 l_g_percep: 1.3367e+01 l_g_gan: 1.9644e-01 l_g_edge: 1.0618e-01 l_g_flat: 6.4331e-03 l_d_real: 2.3252e-01 out_d_real: 5.7219e+00 l_d_fake: 3.2448e-01 out_d_fake: -1.6386e+00 
+2025-05-16 05:08:01,841 INFO: [train..][epoch:  8, iter:  50,000, lr:(1.000e-04,)] [eta: 11:51:07, time (data): 1.411 (0.008)] l_g_pix: 5.8377e-02 l_g_percep: 1.2818e+01 l_g_gan: 1.9899e-01 l_g_edge: 8.9270e-02 l_g_flat: 8.2350e-03 l_d_real: 3.5832e-01 out_d_real: 3.1643e+00 l_d_fake: 2.8481e-01 out_d_fake: -1.7030e+00 
+2025-05-16 05:08:01,841 INFO: Saving models and training states.
+2025-05-16 05:10:25,753 INFO: [train..][epoch:  8, iter:  50,100, lr:(1.000e-04,)] [eta: 11:48:48, time (data): 1.413 (0.006)] l_g_pix: 5.1341e-02 l_g_percep: 1.1766e+01 l_g_gan: 1.6597e-01 l_g_edge: 8.3563e-02 l_g_flat: 6.3498e-03 l_d_real: 3.7175e-01 out_d_real: 3.6011e+00 l_d_fake: 3.4991e-01 out_d_fake: -1.3096e+00 
+2025-05-16 05:12:46,439 INFO: [train..][epoch:  8, iter:  50,200, lr:(1.000e-04,)] [eta: 11:46:22, time (data): 1.408 (0.006)] l_g_pix: 5.0422e-02 l_g_percep: 1.2250e+01 l_g_gan: 1.8607e-01 l_g_edge: 8.0004e-02 l_g_flat: 6.3592e-03 l_d_real: 2.5277e-01 out_d_real: 4.4883e+00 l_d_fake: 3.1738e-01 out_d_fake: -1.5429e+00 
+2025-05-16 05:15:07,178 INFO: [train..][epoch:  8, iter:  50,300, lr:(1.000e-04,)] [eta: 11:43:57, time (data): 1.399 (0.009)] l_g_pix: 5.5078e-02 l_g_percep: 1.1792e+01 l_g_gan: 1.8534e-01 l_g_edge: 8.7116e-02 l_g_flat: 4.5597e-03 l_d_real: 2.9420e-01 out_d_real: 3.7855e+00 l_d_fake: 2.8980e-01 out_d_fake: -1.5628e+00 
+2025-05-16 05:17:28,255 INFO: [train..][epoch:  8, iter:  50,400, lr:(1.000e-04,)] [eta: 11:41:33, time (data): 1.408 (0.007)] l_g_pix: 4.8600e-02 l_g_percep: 9.4768e+00 l_g_gan: 1.8485e-01 l_g_edge: 7.6340e-02 l_g_flat: 6.7215e-03 l_d_real: 3.1824e-01 out_d_real: 6.7265e+00 l_d_fake: 3.6224e-01 out_d_fake: -1.4842e+00 
+2025-05-16 05:19:49,403 INFO: [train..][epoch:  8, iter:  50,500, lr:(1.000e-04,)] [eta: 11:39:09, time (data): 1.424 (0.010)] l_g_pix: 4.1558e-02 l_g_percep: 8.9282e+00 l_g_gan: 1.5009e-01 l_g_edge: 6.7573e-02 l_g_flat: 6.1960e-03 l_d_real: 4.2471e-01 out_d_real: 3.2624e+00 l_d_fake: 3.9897e-01 out_d_fake: -1.1016e+00 
+2025-05-16 05:22:10,815 INFO: [train..][epoch:  8, iter:  50,600, lr:(1.000e-04,)] [eta: 11:36:45, time (data): 1.416 (0.008)] l_g_pix: 2.9830e-02 l_g_percep: 6.2750e+00 l_g_gan: 1.8864e-01 l_g_edge: 3.3076e-02 l_g_flat: 4.2381e-03 l_d_real: 7.8664e-01 out_d_real: 1.3776e+00 l_d_fake: 2.1879e-01 out_d_fake: -1.6673e+00 
+2025-05-16 05:24:31,547 INFO: [train..][epoch:  8, iter:  50,700, lr:(1.000e-04,)] [eta: 11:34:20, time (data): 1.413 (0.007)] l_g_pix: 5.7191e-02 l_g_percep: 1.1037e+01 l_g_gan: 1.9454e-01 l_g_edge: 8.6129e-02 l_g_flat: 7.5258e-03 l_d_real: 5.2806e-01 out_d_real: 2.3907e+00 l_d_fake: 2.7600e-01 out_d_fake: -1.6687e+00 
+2025-05-16 05:27:34,613 INFO: [train..][epoch:  9, iter:  50,800, lr:(1.000e-04,)] [eta: 11:33:13, time (data): 1.755 (0.355)] l_g_pix: 4.7280e-02 l_g_percep: 9.2858e+00 l_g_gan: 2.5076e-01 l_g_edge: 6.8723e-02 l_g_flat: 5.7439e-03 l_d_real: 8.3290e-01 out_d_real: 1.0165e+00 l_d_fake: 2.3738e-01 out_d_fake: -2.2694e+00 
+2025-05-16 05:29:56,829 INFO: [train..][epoch:  9, iter:  50,900, lr:(1.000e-04,)] [eta: 11:30:50, time (data): 1.420 (0.005)] l_g_pix: 4.2980e-02 l_g_percep: 1.0304e+01 l_g_gan: 1.8158e-01 l_g_edge: 6.8818e-02 l_g_flat: 6.0868e-03 l_d_real: 5.0431e-01 out_d_real: 2.5643e+00 l_d_fake: 3.3853e-01 out_d_fake: -1.4766e+00 
+2025-05-16 05:32:17,698 INFO: [train..][epoch:  9, iter:  51,000, lr:(1.000e-04,)] [eta: 11:28:25, time (data): 1.411 (0.007)] l_g_pix: 5.2668e-02 l_g_percep: 1.0605e+01 l_g_gan: 1.8263e-01 l_g_edge: 7.9695e-02 l_g_flat: 5.6427e-03 l_d_real: 5.3543e-01 out_d_real: 2.8472e+00 l_d_fake: 2.9522e-01 out_d_fake: -1.5304e+00 
+2025-05-16 05:34:39,827 INFO: [train..][epoch:  9, iter:  51,100, lr:(1.000e-04,)] [eta: 11:26:02, time (data): 1.418 (0.004)] l_g_pix: 6.7763e-02 l_g_percep: 1.3173e+01 l_g_gan: 1.6758e-01 l_g_edge: 1.0168e-01 l_g_flat: 8.6087e-03 l_d_real: 5.2046e-01 out_d_real: 1.6183e+00 l_d_fake: 2.9633e-01 out_d_fake: -1.3790e+00 
+2025-05-16 05:37:01,445 INFO: [train..][epoch:  9, iter:  51,200, lr:(1.000e-04,)] [eta: 11:23:38, time (data): 1.417 (0.006)] l_g_pix: 5.2965e-02 l_g_percep: 1.0516e+01 l_g_gan: 1.7550e-01 l_g_edge: 7.6491e-02 l_g_flat: 5.2866e-03 l_d_real: 4.0345e-01 out_d_real: 4.2202e+00 l_d_fake: 3.3463e-01 out_d_fake: -1.4201e+00 
+2025-05-16 05:39:22,396 INFO: [train..][epoch:  9, iter:  51,300, lr:(1.000e-04,)] [eta: 11:21:13, time (data): 1.425 (0.005)] l_g_pix: 6.1989e-02 l_g_percep: 1.1785e+01 l_g_gan: 2.0633e-01 l_g_edge: 8.7794e-02 l_g_flat: 5.9432e-03 l_d_real: 3.1555e-01 out_d_real: 4.0923e+00 l_d_fake: 2.7255e-01 out_d_fake: -1.7898e+00 
+2025-05-16 05:41:42,942 INFO: [train..][epoch:  9, iter:  51,400, lr:(1.000e-04,)] [eta: 11:18:47, time (data): 1.409 (0.006)] l_g_pix: 4.4826e-02 l_g_percep: 9.7939e+00 l_g_gan: 1.8902e-01 l_g_edge: 5.8772e-02 l_g_flat: 6.5790e-03 l_d_real: 5.0513e-01 out_d_real: 1.6884e+00 l_d_fake: 2.4312e-01 out_d_fake: -1.6466e+00 
+2025-05-16 05:44:03,703 INFO: [train..][epoch:  9, iter:  51,500, lr:(1.000e-04,)] [eta: 11:16:22, time (data): 1.401 (0.010)] l_g_pix: 4.6606e-02 l_g_percep: 8.6843e+00 l_g_gan: 1.8695e-01 l_g_edge: 6.5179e-02 l_g_flat: 4.2065e-03 l_d_real: 4.4098e-01 out_d_real: 5.8865e+00 l_d_fake: 2.7300e-01 out_d_fake: -1.5958e+00 
+2025-05-16 05:46:25,934 INFO: [train..][epoch:  9, iter:  51,600, lr:(1.000e-04,)] [eta: 11:14:00, time (data): 1.419 (0.009)] l_g_pix: 3.8965e-02 l_g_percep: 1.0259e+01 l_g_gan: 1.7708e-01 l_g_edge: 6.0860e-02 l_g_flat: 4.3948e-03 l_d_real: 2.3334e-01 out_d_real: 4.7365e+00 l_d_fake: 3.1159e-01 out_d_fake: -1.4582e+00 
+2025-05-16 05:48:48,324 INFO: [train..][epoch:  9, iter:  51,700, lr:(1.000e-04,)] [eta: 11:11:37, time (data): 1.416 (0.010)] l_g_pix: 4.5522e-02 l_g_percep: 9.5296e+00 l_g_gan: 1.5963e-01 l_g_edge: 6.5127e-02 l_g_flat: 5.2529e-03 l_d_real: 3.3639e-01 out_d_real: 3.7476e+00 l_d_fake: 3.8819e-01 out_d_fake: -1.2076e+00 
+2025-05-16 05:51:10,030 INFO: [train..][epoch:  9, iter:  51,800, lr:(1.000e-04,)] [eta: 11:09:14, time (data): 1.417 (0.007)] l_g_pix: 6.6316e-02 l_g_percep: 1.2530e+01 l_g_gan: 1.7909e-01 l_g_edge: 1.0123e-01 l_g_flat: 9.5982e-03 l_d_real: 3.8906e-01 out_d_real: 2.7470e+00 l_d_fake: 3.0363e-01 out_d_fake: -1.4869e+00 
+2025-05-16 05:53:31,801 INFO: [train..][epoch:  9, iter:  51,900, lr:(1.000e-04,)] [eta: 11:06:50, time (data): 1.400 (0.006)] l_g_pix: 4.4826e-02 l_g_percep: 9.4684e+00 l_g_gan: 2.4836e-01 l_g_edge: 6.8215e-02 l_g_flat: 6.9532e-03 l_d_real: 6.6360e-01 out_d_real: 2.0609e+00 l_d_fake: 1.7118e-01 out_d_fake: -2.3110e+00 
+2025-05-16 05:55:54,233 INFO: [train..][epoch:  9, iter:  52,000, lr:(1.000e-04,)] [eta: 11:04:28, time (data): 1.421 (0.007)] l_g_pix: 5.6880e-02 l_g_percep: 1.1617e+01 l_g_gan: 2.2226e-01 l_g_edge: 8.5475e-02 l_g_flat: 6.6404e-03 l_d_real: 4.3918e-01 out_d_real: 4.1848e+00 l_d_fake: 2.5893e-01 out_d_fake: -1.9617e+00 
+2025-05-16 05:58:15,471 INFO: [train..][epoch:  9, iter:  52,100, lr:(1.000e-04,)] [eta: 11:02:04, time (data): 1.417 (0.005)] l_g_pix: 4.7951e-02 l_g_percep: 9.6232e+00 l_g_gan: 1.5491e-01 l_g_edge: 7.2234e-02 l_g_flat: 5.1798e-03 l_d_real: 3.9200e-01 out_d_real: 3.0723e+00 l_d_fake: 3.6469e-01 out_d_fake: -1.1838e+00 
+2025-05-16 06:00:36,530 INFO: [train..][epoch:  9, iter:  52,200, lr:(1.000e-04,)] [eta: 10:59:39, time (data): 1.411 (0.007)] l_g_pix: 3.6870e-02 l_g_percep: 7.8743e+00 l_g_gan: 2.2282e-01 l_g_edge: 5.6031e-02 l_g_flat: 4.8793e-03 l_d_real: 6.8355e-01 out_d_real: 2.5796e+00 l_d_fake: 2.0519e-01 out_d_fake: -2.0221e+00 
+2025-05-16 06:02:57,572 INFO: [train..][epoch:  9, iter:  52,300, lr:(1.000e-04,)] [eta: 10:57:14, time (data): 1.418 (0.003)] l_g_pix: 3.6055e-02 l_g_percep: 7.4518e+00 l_g_gan: 1.4439e-01 l_g_edge: 5.1799e-02 l_g_flat: 5.3641e-03 l_d_real: 2.7901e-01 out_d_real: 4.4177e+00 l_d_fake: 4.8229e-01 out_d_fake: -9.6140e-01 
+2025-05-16 06:05:18,452 INFO: [train..][epoch:  9, iter:  52,400, lr:(1.000e-04,)] [eta: 10:54:50, time (data): 1.410 (0.007)] l_g_pix: 4.9741e-02 l_g_percep: 1.0546e+01 l_g_gan: 1.3650e-01 l_g_edge: 8.4246e-02 l_g_flat: 6.6392e-03 l_d_real: 1.9073e-01 out_d_real: 5.5886e+00 l_d_fake: 5.2065e-01 out_d_fake: -8.4412e-01 
+2025-05-16 06:07:39,449 INFO: [train..][epoch:  9, iter:  52,500, lr:(1.000e-04,)] [eta: 10:52:25, time (data): 1.412 (0.003)] l_g_pix: 5.3588e-02 l_g_percep: 1.0076e+01 l_g_gan: 1.6490e-01 l_g_edge: 8.3491e-02 l_g_flat: 5.8155e-03 l_d_real: 2.2780e-01 out_d_real: 4.1666e+00 l_d_fake: 3.8887e-01 out_d_fake: -1.2582e+00 
+2025-05-16 06:10:01,176 INFO: [train..][epoch:  9, iter:  52,600, lr:(1.000e-04,)] [eta: 10:50:02, time (data): 1.417 (0.007)] l_g_pix: 4.1457e-02 l_g_percep: 9.1020e+00 l_g_gan: 2.0982e-01 l_g_edge: 6.3045e-02 l_g_flat: 8.3335e-03 l_d_real: 5.8885e-01 out_d_real: 2.6902e+00 l_d_fake: 2.1089e-01 out_d_fake: -1.8864e+00 
+2025-05-16 06:12:21,768 INFO: [train..][epoch:  9, iter:  52,700, lr:(1.000e-04,)] [eta: 10:47:37, time (data): 1.407 (0.006)] l_g_pix: 4.9625e-02 l_g_percep: 1.0639e+01 l_g_gan: 1.6792e-01 l_g_edge: 7.9606e-02 l_g_flat: 5.8603e-03 l_d_real: 2.9883e-01 out_d_real: 4.6394e+00 l_d_fake: 3.9626e-01 out_d_fake: -1.2824e+00 
+2025-05-16 06:14:44,206 INFO: [train..][epoch:  9, iter:  52,800, lr:(1.000e-04,)] [eta: 10:45:15, time (data): 1.423 (0.007)] l_g_pix: 5.4085e-02 l_g_percep: 1.1331e+01 l_g_gan: 1.5865e-01 l_g_edge: 8.3713e-02 l_g_flat: 8.9371e-03 l_d_real: 4.5845e-01 out_d_real: 1.8361e+00 l_d_fake: 3.7701e-01 out_d_fake: -1.2094e+00 
+2025-05-16 06:17:05,556 INFO: [train..][epoch:  9, iter:  52,900, lr:(1.000e-04,)] [eta: 10:42:51, time (data): 1.423 (0.008)] l_g_pix: 4.9047e-02 l_g_percep: 1.0249e+01 l_g_gan: 1.6834e-01 l_g_edge: 6.9300e-02 l_g_flat: 7.5291e-03 l_d_real: 3.9649e-01 out_d_real: 3.6130e+00 l_d_fake: 3.6146e-01 out_d_fake: -1.3217e+00 
+2025-05-16 06:19:27,254 INFO: [train..][epoch:  9, iter:  53,000, lr:(1.000e-04,)] [eta: 10:40:28, time (data): 1.418 (0.008)] l_g_pix: 5.7831e-02 l_g_percep: 1.1462e+01 l_g_gan: 2.1804e-01 l_g_edge: 8.8024e-02 l_g_flat: 5.3266e-03 l_d_real: 4.0487e-01 out_d_real: 4.5470e+00 l_d_fake: 1.9944e-01 out_d_fake: -1.9799e+00 
+2025-05-16 06:21:48,638 INFO: [train..][epoch:  9, iter:  53,100, lr:(1.000e-04,)] [eta: 10:38:04, time (data): 1.406 (0.009)] l_g_pix: 4.9951e-02 l_g_percep: 1.0764e+01 l_g_gan: 1.6444e-01 l_g_edge: 7.5870e-02 l_g_flat: 6.4276e-03 l_d_real: 3.3781e-01 out_d_real: 4.7232e+00 l_d_fake: 4.4279e-01 out_d_fake: -1.2012e+00 
+2025-05-16 06:24:09,794 INFO: [train..][epoch:  9, iter:  53,200, lr:(1.000e-04,)] [eta: 10:35:40, time (data): 1.411 (0.007)] l_g_pix: 4.7563e-02 l_g_percep: 9.7274e+00 l_g_gan: 1.6731e-01 l_g_edge: 7.4820e-02 l_g_flat: 5.6112e-03 l_d_real: 4.5932e-01 out_d_real: 2.1648e+00 l_d_fake: 3.3443e-01 out_d_fake: -1.3380e+00 
+2025-05-16 06:26:32,186 INFO: [train..][epoch:  9, iter:  53,300, lr:(1.000e-04,)] [eta: 10:33:18, time (data): 1.406 (0.006)] l_g_pix: 5.8724e-02 l_g_percep: 1.1946e+01 l_g_gan: 2.1859e-01 l_g_edge: 9.2767e-02 l_g_flat: 6.0496e-03 l_d_real: 6.3093e-01 out_d_real: 2.6879e+00 l_d_fake: 1.9965e-01 out_d_fake: -1.9854e+00 
+2025-05-16 06:28:54,396 INFO: [train..][epoch:  9, iter:  53,400, lr:(1.000e-04,)] [eta: 10:30:55, time (data): 1.421 (0.006)] l_g_pix: 6.0143e-02 l_g_percep: 1.2301e+01 l_g_gan: 1.8562e-01 l_g_edge: 9.2409e-02 l_g_flat: 7.2578e-03 l_d_real: 3.5013e-01 out_d_real: 4.8531e+00 l_d_fake: 3.7200e-01 out_d_fake: -1.4829e+00 
+2025-05-16 06:31:16,607 INFO: [train..][epoch:  9, iter:  53,500, lr:(1.000e-04,)] [eta: 10:28:33, time (data): 1.461 (0.005)] l_g_pix: 4.8760e-02 l_g_percep: 9.1908e+00 l_g_gan: 1.5012e-01 l_g_edge: 5.6287e-02 l_g_flat: 5.6836e-03 l_d_real: 4.4395e-01 out_d_real: 2.5425e+00 l_d_fake: 3.1774e-01 out_d_fake: -1.1834e+00 
+2025-05-16 06:33:37,724 INFO: [train..][epoch:  9, iter:  53,600, lr:(1.000e-04,)] [eta: 10:26:09, time (data): 1.415 (0.007)] l_g_pix: 4.0929e-02 l_g_percep: 8.5436e+00 l_g_gan: 1.7822e-01 l_g_edge: 6.1334e-02 l_g_flat: 5.7654e-03 l_d_real: 4.6337e-01 out_d_real: 2.8729e+00 l_d_fake: 2.8985e-01 out_d_fake: -1.4919e+00 
+2025-05-16 06:35:58,514 INFO: [train..][epoch:  9, iter:  53,700, lr:(1.000e-04,)] [eta: 10:23:44, time (data): 1.403 (0.010)] l_g_pix: 5.8317e-02 l_g_percep: 1.2369e+01 l_g_gan: 1.7312e-01 l_g_edge: 9.1688e-02 l_g_flat: 7.0377e-03 l_d_real: 2.7419e-01 out_d_real: 5.5668e+00 l_d_fake: 3.6259e-01 out_d_fake: -1.3673e+00 
+2025-05-16 06:38:19,202 INFO: [train..][epoch:  9, iter:  53,800, lr:(1.000e-04,)] [eta: 10:21:20, time (data): 1.407 (0.007)] l_g_pix: 4.2239e-02 l_g_percep: 9.3502e+00 l_g_gan: 1.4148e-01 l_g_edge: 6.1972e-02 l_g_flat: 5.0858e-03 l_d_real: 2.4212e-01 out_d_real: 3.6357e+00 l_d_fake: 4.1905e-01 out_d_fake: -9.9536e-01 
+2025-05-16 06:40:40,073 INFO: [train..][epoch:  9, iter:  53,900, lr:(1.000e-04,)] [eta: 10:18:55, time (data): 1.423 (0.015)] l_g_pix: 3.6774e-02 l_g_percep: 7.8109e+00 l_g_gan: 1.4320e-01 l_g_edge: 5.0681e-02 l_g_flat: 4.7687e-03 l_d_real: 4.3701e-01 out_d_real: 2.8179e+00 l_d_fake: 4.7363e-01 out_d_fake: -9.5843e-01 
+2025-05-16 06:43:02,004 INFO: [train..][epoch:  9, iter:  54,000, lr:(1.000e-04,)] [eta: 10:16:33, time (data): 1.420 (0.007)] l_g_pix: 4.1573e-02 l_g_percep: 9.6701e+00 l_g_gan: 1.8048e-01 l_g_edge: 6.5938e-02 l_g_flat: 4.3538e-03 l_d_real: 3.8726e-01 out_d_real: 4.8873e+00 l_d_fake: 3.6715e-01 out_d_fake: -1.4367e+00 
+2025-05-16 06:45:23,519 INFO: [train..][epoch:  9, iter:  54,100, lr:(1.000e-04,)] [eta: 10:14:09, time (data): 1.401 (0.007)] l_g_pix: 5.5176e-02 l_g_percep: 1.1969e+01 l_g_gan: 2.1542e-01 l_g_edge: 8.1687e-02 l_g_flat: 7.3569e-03 l_d_real: 5.3410e-01 out_d_real: 2.7687e+00 l_d_fake: 2.4358e-01 out_d_fake: -1.9102e+00 
+2025-05-16 06:47:46,182 INFO: [train..][epoch:  9, iter:  54,200, lr:(1.000e-04,)] [eta: 10:11:47, time (data): 1.425 (0.007)] l_g_pix: 4.4677e-02 l_g_percep: 1.0201e+01 l_g_gan: 1.5711e-01 l_g_edge: 6.4534e-02 l_g_flat: 4.0253e-03 l_d_real: 2.4072e-01 out_d_real: 4.3168e+00 l_d_fake: 3.7477e-01 out_d_fake: -1.1960e+00 
+2025-05-16 06:50:08,871 INFO: [train..][epoch:  9, iter:  54,300, lr:(1.000e-04,)] [eta: 10:09:26, time (data): 1.424 (0.004)] l_g_pix: 4.4638e-02 l_g_percep: 9.9948e+00 l_g_gan: 1.6012e-01 l_g_edge: 7.1656e-02 l_g_flat: 6.1802e-03 l_d_real: 4.0378e-01 out_d_real: 2.5259e+00 l_d_fake: 3.8709e-01 out_d_fake: -1.2139e+00 
+2025-05-16 06:52:32,020 INFO: [train..][epoch:  9, iter:  54,400, lr:(1.000e-04,)] [eta: 10:07:04, time (data): 1.431 (0.007)] l_g_pix: 3.1608e-02 l_g_percep: 7.4826e+00 l_g_gan: 1.7857e-01 l_g_edge: 4.1637e-02 l_g_flat: 5.4155e-03 l_d_real: 4.1194e-01 out_d_real: 2.5692e+00 l_d_fake: 3.2385e-01 out_d_fake: -1.4613e+00 
+2025-05-16 06:54:53,400 INFO: [train..][epoch:  9, iter:  54,500, lr:(1.000e-04,)] [eta: 10:04:41, time (data): 1.433 (0.000)] l_g_pix: 3.5783e-02 l_g_percep: 9.0668e+00 l_g_gan: 1.9034e-01 l_g_edge: 5.5090e-02 l_g_flat: 6.1374e-03 l_d_real: 4.4130e-01 out_d_real: 2.1272e+00 l_d_fake: 3.6827e-01 out_d_fake: -1.5341e+00 
+2025-05-16 06:57:14,731 INFO: [train..][epoch:  9, iter:  54,600, lr:(1.000e-04,)] [eta: 10:02:18, time (data): 1.414 (0.006)] l_g_pix: 5.3051e-02 l_g_percep: 1.1283e+01 l_g_gan: 2.1491e-01 l_g_edge: 8.6916e-02 l_g_flat: 5.1304e-03 l_d_real: 4.3173e-01 out_d_real: 2.8580e+00 l_d_fake: 2.1637e-01 out_d_fake: -1.9318e+00 
+2025-05-16 06:59:36,077 INFO: [train..][epoch:  9, iter:  54,700, lr:(1.000e-04,)] [eta: 9:59:54, time (data): 1.412 (0.009)] l_g_pix: 5.1492e-02 l_g_percep: 1.0571e+01 l_g_gan: 2.1577e-01 l_g_edge: 8.0783e-02 l_g_flat: 5.9599e-03 l_d_real: 4.8958e-01 out_d_real: 3.7791e+00 l_d_fake: 2.5328e-01 out_d_fake: -1.9039e+00 
+2025-05-16 07:01:57,982 INFO: [train..][epoch:  9, iter:  54,800, lr:(1.000e-04,)] [eta: 9:57:31, time (data): 1.419 (0.006)] l_g_pix: 5.2136e-02 l_g_percep: 1.0695e+01 l_g_gan: 1.3065e-01 l_g_edge: 7.8817e-02 l_g_flat: 4.7809e-03 l_d_real: 2.4479e-01 out_d_real: 5.1397e+00 l_d_fake: 5.5256e-01 out_d_fake: -7.5346e-01 
+2025-05-16 07:04:19,408 INFO: [train..][epoch:  9, iter:  54,900, lr:(1.000e-04,)] [eta: 9:55:08, time (data): 1.393 (0.000)] l_g_pix: 6.2947e-02 l_g_percep: 1.2250e+01 l_g_gan: 1.4439e-01 l_g_edge: 9.5344e-02 l_g_flat: 7.0776e-03 l_d_real: 2.7590e-01 out_d_real: 4.5073e+00 l_d_fake: 5.7174e-01 out_d_fake: -8.7181e-01 
+2025-05-16 07:06:40,249 INFO: [train..][epoch:  9, iter:  55,000, lr:(1.000e-04,)] [eta: 9:52:44, time (data): 1.408 (0.007)] l_g_pix: 3.5259e-02 l_g_percep: 8.9381e+00 l_g_gan: 2.4503e-01 l_g_edge: 5.3624e-02 l_g_flat: 4.7795e-03 l_d_real: 7.6337e-01 out_d_real: 2.1617e+00 l_d_fake: 1.8429e-01 out_d_fake: -2.2637e+00 
+2025-05-16 07:06:40,249 INFO: Saving models and training states.
+2025-05-16 07:09:05,232 INFO: [train..][epoch:  9, iter:  55,100, lr:(1.000e-04,)] [eta: 9:50:25, time (data): 1.420 (0.006)] l_g_pix: 5.3770e-02 l_g_percep: 1.2054e+01 l_g_gan: 2.5461e-01 l_g_edge: 8.6958e-02 l_g_flat: 6.2140e-03 l_d_real: 5.4323e-01 out_d_real: 4.2081e+00 l_d_fake: 1.5119e-01 out_d_fake: -2.3910e+00 
+2025-05-16 07:11:26,206 INFO: [train..][epoch:  9, iter:  55,200, lr:(1.000e-04,)] [eta: 9:48:01, time (data): 1.410 (0.006)] l_g_pix: 5.0464e-02 l_g_percep: 1.0992e+01 l_g_gan: 1.3662e-01 l_g_edge: 7.5268e-02 l_g_flat: 6.0113e-03 l_d_real: 2.7576e-01 out_d_real: 3.5957e+00 l_d_fake: 4.6246e-01 out_d_fake: -9.0355e-01 
+2025-05-16 07:13:47,192 INFO: [train..][epoch:  9, iter:  55,300, lr:(1.000e-04,)] [eta: 9:45:37, time (data): 1.410 (0.006)] l_g_pix: 4.2938e-02 l_g_percep: 9.1383e+00 l_g_gan: 2.0600e-01 l_g_edge: 6.2603e-02 l_g_flat: 6.2382e-03 l_d_real: 4.2731e-01 out_d_real: 2.5311e+00 l_d_fake: 2.1553e-01 out_d_fake: -1.8416e+00 
+2025-05-16 07:16:09,241 INFO: [train..][epoch:  9, iter:  55,400, lr:(1.000e-04,)] [eta: 9:43:15, time (data): 1.421 (0.006)] l_g_pix: 4.9121e-02 l_g_percep: 1.0721e+01 l_g_gan: 1.7388e-01 l_g_edge: 7.6379e-02 l_g_flat: 7.6189e-03 l_d_real: 2.3174e-01 out_d_real: 4.7579e+00 l_d_fake: 3.2582e-01 out_d_fake: -1.4120e+00 
+2025-05-16 07:18:30,905 INFO: [train..][epoch:  9, iter:  55,500, lr:(1.000e-04,)] [eta: 9:40:52, time (data): 1.419 (0.007)] l_g_pix: 4.8927e-02 l_g_percep: 9.6684e+00 l_g_gan: 1.8464e-01 l_g_edge: 6.7174e-02 l_g_flat: 6.7538e-03 l_d_real: 4.3748e-01 out_d_real: 3.2341e+00 l_d_fake: 2.9825e-01 out_d_fake: -1.5469e+00 
+2025-05-16 07:20:52,951 INFO: [train..][epoch:  9, iter:  55,600, lr:(1.000e-04,)] [eta: 9:38:29, time (data): 1.421 (0.007)] l_g_pix: 4.5934e-02 l_g_percep: 9.6186e+00 l_g_gan: 2.0203e-01 l_g_edge: 6.9811e-02 l_g_flat: 4.1506e-03 l_d_real: 3.6158e-01 out_d_real: 3.9927e+00 l_d_fake: 2.5906e-01 out_d_fake: -1.7601e+00 
+2025-05-16 07:23:14,787 INFO: [train..][epoch:  9, iter:  55,700, lr:(1.000e-04,)] [eta: 9:36:06, time (data): 1.419 (0.006)] l_g_pix: 4.8411e-02 l_g_percep: 9.5679e+00 l_g_gan: 1.9470e-01 l_g_edge: 7.1282e-02 l_g_flat: 6.5386e-03 l_d_real: 5.0453e-01 out_d_real: 2.9062e+00 l_d_fake: 2.7352e-01 out_d_fake: -1.6715e+00 
+2025-05-16 07:25:36,466 INFO: [train..][epoch:  9, iter:  55,800, lr:(1.000e-04,)] [eta: 9:33:44, time (data): 1.417 (0.005)] l_g_pix: 5.6851e-02 l_g_percep: 1.1263e+01 l_g_gan: 1.8614e-01 l_g_edge: 9.0313e-02 l_g_flat: 5.7702e-03 l_d_real: 5.2380e-01 out_d_real: 1.9950e+00 l_d_fake: 2.6888e-01 out_d_fake: -1.5922e+00 
+2025-05-16 07:27:57,979 INFO: [train..][epoch:  9, iter:  55,900, lr:(1.000e-04,)] [eta: 9:31:20, time (data): 1.416 (0.005)] l_g_pix: 4.8463e-02 l_g_percep: 1.0415e+01 l_g_gan: 1.3426e-01 l_g_edge: 7.2585e-02 l_g_flat: 6.7425e-03 l_d_real: 3.1663e-01 out_d_real: 2.6994e+00 l_d_fake: 4.6741e-01 out_d_fake: -8.7484e-01 
+2025-05-16 07:31:01,896 INFO: [train..][epoch: 10, iter:  56,000, lr:(1.000e-04,)] [eta: 9:29:46, time (data): 1.857 (0.450)] l_g_pix: 5.8300e-02 l_g_percep: 1.2227e+01 l_g_gan: 1.9457e-01 l_g_edge: 9.3657e-02 l_g_flat: 6.3156e-03 l_d_real: 2.7974e-01 out_d_real: 4.6733e+00 l_d_fake: 3.1933e-01 out_d_fake: -1.6255e+00 
+2025-05-16 07:33:23,815 INFO: [train..][epoch: 10, iter:  56,100, lr:(1.000e-04,)] [eta: 9:27:23, time (data): 1.634 (0.224)] l_g_pix: 4.6568e-02 l_g_percep: 1.0040e+01 l_g_gan: 1.3979e-01 l_g_edge: 6.9526e-02 l_g_flat: 6.4905e-03 l_d_real: 3.5905e-01 out_d_real: 3.1638e+00 l_d_fake: 5.0218e-01 out_d_fake: -8.9521e-01 
+2025-05-16 07:35:45,962 INFO: [train..][epoch: 10, iter:  56,200, lr:(1.000e-04,)] [eta: 9:25:00, time (data): 1.422 (0.006)] l_g_pix: 4.4370e-02 l_g_percep: 9.5891e+00 l_g_gan: 1.9065e-01 l_g_edge: 6.5675e-02 l_g_flat: 7.2701e-03 l_d_real: 3.3081e-01 out_d_real: 3.3655e+00 l_d_fake: 2.9280e-01 out_d_fake: -1.6128e+00 
+2025-05-16 07:38:06,267 INFO: [train..][epoch: 10, iter:  56,300, lr:(1.000e-04,)] [eta: 9:22:35, time (data): 1.412 (0.007)] l_g_pix: 5.4714e-02 l_g_percep: 1.1372e+01 l_g_gan: 1.7812e-01 l_g_edge: 8.0253e-02 l_g_flat: 5.9403e-03 l_d_real: 3.2676e-01 out_d_real: 4.3548e+00 l_d_fake: 3.3741e-01 out_d_fake: -1.4434e+00 
+2025-05-16 07:40:28,073 INFO: [train..][epoch: 10, iter:  56,400, lr:(1.000e-04,)] [eta: 9:20:12, time (data): 1.419 (0.006)] l_g_pix: 4.3098e-02 l_g_percep: 8.7690e+00 l_g_gan: 2.0964e-01 l_g_edge: 6.4551e-02 l_g_flat: 4.7658e-03 l_d_real: 4.5711e-01 out_d_real: 3.3874e+00 l_d_fake: 2.5227e-01 out_d_fake: -1.8430e+00 
+2025-05-16 07:42:49,681 INFO: [train..][epoch: 10, iter:  56,500, lr:(1.000e-04,)] [eta: 9:17:49, time (data): 1.417 (0.007)] l_g_pix: 4.7649e-02 l_g_percep: 9.5742e+00 l_g_gan: 1.7394e-01 l_g_edge: 6.5425e-02 l_g_flat: 6.2221e-03 l_d_real: 4.6062e-01 out_d_real: 1.9411e+00 l_d_fake: 3.2214e-01 out_d_fake: -1.4167e+00 
+2025-05-16 07:45:11,783 INFO: [train..][epoch: 10, iter:  56,600, lr:(1.000e-04,)] [eta: 9:15:26, time (data): 1.422 (0.008)] l_g_pix: 4.0221e-02 l_g_percep: 8.8714e+00 l_g_gan: 1.6966e-01 l_g_edge: 6.1407e-02 l_g_flat: 6.6436e-03 l_d_real: 3.0559e-01 out_d_real: 3.2457e+00 l_d_fake: 4.1509e-01 out_d_fake: -1.2812e+00 
+2025-05-16 07:47:32,512 INFO: [train..][epoch: 10, iter:  56,700, lr:(1.000e-04,)] [eta: 9:13:02, time (data): 1.415 (0.007)] l_g_pix: 5.9435e-02 l_g_percep: 1.2862e+01 l_g_gan: 1.8980e-01 l_g_edge: 9.7365e-02 l_g_flat: 5.5532e-03 l_d_real: 2.0641e-01 out_d_real: 6.1169e+00 l_d_fake: 3.3999e-01 out_d_fake: -1.5573e+00 
+2025-05-16 07:49:54,203 INFO: [train..][epoch: 10, iter:  56,800, lr:(1.000e-04,)] [eta: 9:10:38, time (data): 1.418 (0.006)] l_g_pix: 4.7560e-02 l_g_percep: 9.4423e+00 l_g_gan: 1.9248e-01 l_g_edge: 6.9024e-02 l_g_flat: 5.8777e-03 l_d_real: 5.1401e-01 out_d_real: 2.4897e+00 l_d_fake: 2.8620e-01 out_d_fake: -1.6381e+00 
+2025-05-16 07:52:15,909 INFO: [train..][epoch: 10, iter:  56,900, lr:(1.000e-04,)] [eta: 9:08:15, time (data): 1.418 (0.006)] l_g_pix: 6.4054e-02 l_g_percep: 9.8806e+00 l_g_gan: 1.8072e-01 l_g_edge: 8.3896e-02 l_g_flat: 6.1576e-03 l_d_real: 4.0790e-01 out_d_real: 2.6311e+00 l_d_fake: 3.2816e-01 out_d_fake: -1.4785e+00 
+2025-05-16 07:54:37,821 INFO: [train..][epoch: 10, iter:  57,000, lr:(1.000e-04,)] [eta: 9:05:52, time (data): 1.421 (0.008)] l_g_pix: 7.0062e-02 l_g_percep: 1.4626e+01 l_g_gan: 1.7207e-01 l_g_edge: 1.1087e-01 l_g_flat: 6.8530e-03 l_d_real: 2.8854e-01 out_d_real: 5.5124e+00 l_d_fake: 3.8175e-01 out_d_fake: -1.3386e+00 
+2025-05-16 07:56:58,655 INFO: [train..][epoch: 10, iter:  57,100, lr:(1.000e-04,)] [eta: 9:03:28, time (data): 1.414 (0.006)] l_g_pix: 6.2117e-02 l_g_percep: 1.3148e+01 l_g_gan: 1.7556e-01 l_g_edge: 1.0107e-01 l_g_flat: 7.7912e-03 l_d_real: 3.1702e-01 out_d_real: 4.4938e+00 l_d_fake: 2.7409e-01 out_d_fake: -1.4812e+00 
+2025-05-16 07:59:19,452 INFO: [train..][epoch: 10, iter:  57,200, lr:(1.000e-04,)] [eta: 9:01:04, time (data): 1.408 (0.006)] l_g_pix: 3.8272e-02 l_g_percep: 8.1640e+00 l_g_gan: 2.1929e-01 l_g_edge: 5.4834e-02 l_g_flat: 5.5130e-03 l_d_real: 6.0166e-01 out_d_real: 3.5818e+00 l_d_fake: 2.0799e-01 out_d_fake: -1.9840e+00 
+2025-05-16 08:01:40,436 INFO: [train..][epoch: 10, iter:  57,300, lr:(1.000e-04,)] [eta: 8:58:40, time (data): 1.409 (0.006)] l_g_pix: 4.2034e-02 l_g_percep: 8.5983e+00 l_g_gan: 1.8937e-01 l_g_edge: 5.8462e-02 l_g_flat: 5.8735e-03 l_d_real: 4.3322e-01 out_d_real: 3.0973e+00 l_d_fake: 2.7487e-01 out_d_fake: -1.6186e+00 
+2025-05-16 08:04:01,649 INFO: [train..][epoch: 10, iter:  57,400, lr:(1.000e-04,)] [eta: 8:56:17, time (data): 1.413 (0.007)] l_g_pix: 4.1060e-02 l_g_percep: 8.3475e+00 l_g_gan: 1.7857e-01 l_g_edge: 6.5722e-02 l_g_flat: 5.5104e-03 l_d_real: 4.4022e-01 out_d_real: 3.6973e+00 l_d_fake: 2.7043e-01 out_d_fake: -1.5145e+00 
+2025-05-16 08:06:24,575 INFO: [train..][epoch: 10, iter:  57,500, lr:(1.000e-04,)] [eta: 8:53:55, time (data): 1.422 (0.006)] l_g_pix: 4.3386e-02 l_g_percep: 9.0611e+00 l_g_gan: 1.2217e-01 l_g_edge: 6.7708e-02 l_g_flat: 4.9056e-03 l_d_real: 2.4644e-01 out_d_real: 5.2275e+00 l_d_fake: 5.7268e-01 out_d_fake: -6.4873e-01 
+2025-05-16 08:08:45,774 INFO: [train..][epoch: 10, iter:  57,600, lr:(1.000e-04,)] [eta: 8:51:31, time (data): 1.408 (0.008)] l_g_pix: 4.6298e-02 l_g_percep: 9.7307e+00 l_g_gan: 1.5698e-01 l_g_edge: 6.7186e-02 l_g_flat: 5.6352e-03 l_d_real: 3.2238e-01 out_d_real: 4.4269e+00 l_d_fake: 3.7817e-01 out_d_fake: -1.1915e+00 
+2025-05-16 08:11:08,376 INFO: [train..][epoch: 10, iter:  57,700, lr:(1.000e-04,)] [eta: 8:49:09, time (data): 1.417 (0.007)] l_g_pix: 4.9166e-02 l_g_percep: 1.0929e+01 l_g_gan: 2.0552e-01 l_g_edge: 8.1135e-02 l_g_flat: 5.4924e-03 l_d_real: 5.7958e-01 out_d_real: 2.8653e+00 l_d_fake: 2.5050e-01 out_d_fake: -1.8037e+00 
+2025-05-16 08:13:29,171 INFO: [train..][epoch: 10, iter:  57,800, lr:(1.000e-04,)] [eta: 8:46:45, time (data): 1.404 (0.007)] l_g_pix: 5.1632e-02 l_g_percep: 1.2161e+01 l_g_gan: 1.7828e-01 l_g_edge: 9.0826e-02 l_g_flat: 5.5772e-03 l_d_real: 2.5597e-01 out_d_real: 5.5169e+00 l_d_fake: 3.1950e-01 out_d_fake: -1.4630e+00 
+2025-05-16 08:15:50,768 INFO: [train..][epoch: 10, iter:  57,900, lr:(1.000e-04,)] [eta: 8:44:22, time (data): 1.410 (0.006)] l_g_pix: 5.7949e-02 l_g_percep: 1.1763e+01 l_g_gan: 1.6659e-01 l_g_edge: 8.9152e-02 l_g_flat: 6.4670e-03 l_d_real: 4.1278e-01 out_d_real: 4.4298e+00 l_d_fake: 3.9961e-01 out_d_fake: -1.2659e+00 
+2025-05-16 08:18:12,405 INFO: [train..][epoch: 10, iter:  58,000, lr:(1.000e-04,)] [eta: 8:41:59, time (data): 1.417 (0.005)] l_g_pix: 3.9313e-02 l_g_percep: 9.0497e+00 l_g_gan: 1.8267e-01 l_g_edge: 5.9889e-02 l_g_flat: 6.3311e-03 l_d_real: 3.4795e-01 out_d_real: 4.1972e+00 l_d_fake: 3.4091e-01 out_d_fake: -1.4850e+00 
+2025-05-16 08:20:34,364 INFO: [train..][epoch: 10, iter:  58,100, lr:(1.000e-04,)] [eta: 8:39:36, time (data): 1.418 (0.006)] l_g_pix: 5.2313e-02 l_g_percep: 1.0571e+01 l_g_gan: 1.8785e-01 l_g_edge: 8.2789e-02 l_g_flat: 7.4029e-03 l_d_real: 3.9314e-01 out_d_real: 3.7541e+00 l_d_fake: 3.2446e-01 out_d_fake: -1.5534e+00 
+2025-05-16 08:22:55,663 INFO: [train..][epoch: 10, iter:  58,200, lr:(1.000e-04,)] [eta: 8:37:13, time (data): 1.416 (0.007)] l_g_pix: 5.5565e-02 l_g_percep: 1.1995e+01 l_g_gan: 1.9159e-01 l_g_edge: 9.4973e-02 l_g_flat: 7.4484e-03 l_d_real: 3.2955e-01 out_d_real: 3.6330e+00 l_d_fake: 3.1543e-01 out_d_fake: -1.5994e+00 
+2025-05-16 08:25:16,212 INFO: [train..][epoch: 10, iter:  58,300, lr:(1.000e-04,)] [eta: 8:34:49, time (data): 1.410 (0.007)] l_g_pix: 5.2566e-02 l_g_percep: 1.0388e+01 l_g_gan: 1.8452e-01 l_g_edge: 8.5240e-02 l_g_flat: 6.0057e-03 l_d_real: 2.4516e-01 out_d_real: 4.6369e+00 l_d_fake: 3.5956e-01 out_d_fake: -1.4845e+00 
+2025-05-16 08:27:37,249 INFO: [train..][epoch: 10, iter:  58,400, lr:(1.000e-04,)] [eta: 8:32:25, time (data): 1.412 (0.006)] l_g_pix: 3.6287e-02 l_g_percep: 8.1726e+00 l_g_gan: 1.9520e-01 l_g_edge: 5.0633e-02 l_g_flat: 5.4372e-03 l_d_real: 3.9679e-01 out_d_real: 2.7707e+00 l_d_fake: 2.8508e-01 out_d_fake: -1.6659e+00 
+2025-05-16 08:29:58,732 INFO: [train..][epoch: 10, iter:  58,500, lr:(1.000e-04,)] [eta: 8:30:02, time (data): 1.413 (0.006)] l_g_pix: 6.6628e-02 l_g_percep: 1.1978e+01 l_g_gan: 2.0023e-01 l_g_edge: 8.7561e-02 l_g_flat: 4.6474e-03 l_d_real: 1.9502e-01 out_d_real: 8.7845e+00 l_d_fake: 4.1024e-01 out_d_fake: -1.5915e+00 
+2025-05-16 08:32:19,484 INFO: [train..][epoch: 10, iter:  58,600, lr:(1.000e-04,)] [eta: 8:27:39, time (data): 1.408 (0.007)] l_g_pix: 4.9926e-02 l_g_percep: 1.1476e+01 l_g_gan: 1.9817e-01 l_g_edge: 7.4983e-02 l_g_flat: 6.7154e-03 l_d_real: 4.7711e-01 out_d_real: 3.9451e+00 l_d_fake: 2.8178e-01 out_d_fake: -1.6981e+00 
+2025-05-16 08:34:41,914 INFO: [train..][epoch: 10, iter:  58,700, lr:(1.000e-04,)] [eta: 8:25:16, time (data): 1.417 (0.008)] l_g_pix: 5.5996e-02 l_g_percep: 1.1006e+01 l_g_gan: 2.1120e-01 l_g_edge: 8.7894e-02 l_g_flat: 6.3960e-03 l_d_real: 7.4964e-01 out_d_real: 1.8331e+00 l_d_fake: 2.2700e-01 out_d_fake: -1.8848e+00 
+2025-05-16 08:37:03,034 INFO: [train..][epoch: 10, iter:  58,800, lr:(1.000e-04,)] [eta: 8:22:53, time (data): 1.408 (0.007)] l_g_pix: 3.7106e-02 l_g_percep: 8.5015e+00 l_g_gan: 1.6355e-01 l_g_edge: 5.2178e-02 l_g_flat: 5.6687e-03 l_d_real: 3.9751e-01 out_d_real: 2.7694e+00 l_d_fake: 4.3727e-01 out_d_fake: -1.1979e+00 
+2025-05-16 08:39:24,224 INFO: [train..][epoch: 10, iter:  58,900, lr:(1.000e-04,)] [eta: 8:20:29, time (data): 1.410 (0.007)] l_g_pix: 4.9250e-02 l_g_percep: 9.4842e+00 l_g_gan: 2.0560e-01 l_g_edge: 7.3307e-02 l_g_flat: 5.5085e-03 l_d_real: 6.2789e-01 out_d_real: 3.2166e+00 l_d_fake: 2.6146e-01 out_d_fake: -1.7934e+00 
+2025-05-16 08:41:45,237 INFO: [train..][epoch: 10, iter:  59,000, lr:(1.000e-04,)] [eta: 8:18:06, time (data): 1.412 (0.008)] l_g_pix: 5.4484e-02 l_g_percep: 1.0717e+01 l_g_gan: 2.1229e-01 l_g_edge: 8.5773e-02 l_g_flat: 5.6451e-03 l_d_real: 4.8095e-01 out_d_real: 3.5969e+00 l_d_fake: 2.3792e-01 out_d_fake: -1.8844e+00 
+2025-05-16 08:44:06,279 INFO: [train..][epoch: 10, iter:  59,100, lr:(1.000e-04,)] [eta: 8:15:43, time (data): 1.411 (0.007)] l_g_pix: 6.8902e-02 l_g_percep: 1.4069e+01 l_g_gan: 1.8321e-01 l_g_edge: 1.1023e-01 l_g_flat: 7.2672e-03 l_d_real: 1.4717e-01 out_d_real: 6.5614e+00 l_d_fake: 3.2600e-01 out_d_fake: -1.5058e+00 
+2025-05-16 08:46:27,129 INFO: [train..][epoch: 10, iter:  59,200, lr:(1.000e-04,)] [eta: 8:13:19, time (data): 1.410 (0.008)] l_g_pix: 4.7878e-02 l_g_percep: 1.0575e+01 l_g_gan: 2.2324e-01 l_g_edge: 7.1227e-02 l_g_flat: 7.5369e-03 l_d_real: 6.2260e-01 out_d_real: 2.1332e+00 l_d_fake: 2.0395e-01 out_d_fake: -2.0276e+00 
+2025-05-16 08:48:47,732 INFO: [train..][epoch: 10, iter:  59,300, lr:(1.000e-04,)] [eta: 8:10:55, time (data): 1.408 (0.007)] l_g_pix: 6.2426e-02 l_g_percep: 1.1598e+01 l_g_gan: 1.3962e-01 l_g_edge: 9.7580e-02 l_g_flat: 6.2365e-03 l_d_real: 1.6726e-01 out_d_real: 4.8271e+00 l_d_fake: 5.0743e-01 out_d_fake: -8.8799e-01 
+2025-05-16 08:51:08,970 INFO: [train..][epoch: 10, iter:  59,400, lr:(1.000e-04,)] [eta: 8:08:32, time (data): 1.416 (0.008)] l_g_pix: 4.4652e-02 l_g_percep: 9.3383e+00 l_g_gan: 1.7763e-01 l_g_edge: 6.8654e-02 l_g_flat: 5.9283e-03 l_d_real: 5.6010e-01 out_d_real: 2.3723e+00 l_d_fake: 3.3830e-01 out_d_fake: -1.4362e+00 
+2025-05-16 08:53:30,282 INFO: [train..][epoch: 10, iter:  59,500, lr:(1.000e-04,)] [eta: 8:06:09, time (data): 1.415 (0.007)] l_g_pix: 4.1215e-02 l_g_percep: 9.0553e+00 l_g_gan: 1.5736e-01 l_g_edge: 6.1044e-02 l_g_flat: 5.4500e-03 l_d_real: 3.3814e-01 out_d_real: 3.5511e+00 l_d_fake: 4.0715e-01 out_d_fake: -1.1661e+00 
+2025-05-16 08:55:51,654 INFO: [train..][epoch: 10, iter:  59,600, lr:(1.000e-04,)] [eta: 8:03:46, time (data): 1.417 (0.007)] l_g_pix: 4.6896e-02 l_g_percep: 9.4628e+00 l_g_gan: 1.8927e-01 l_g_edge: 6.1684e-02 l_g_flat: 7.3188e-03 l_d_real: 5.1152e-01 out_d_real: 1.8287e+00 l_d_fake: 2.9558e-01 out_d_fake: -1.5967e+00 
+2025-05-16 08:58:12,683 INFO: [train..][epoch: 10, iter:  59,700, lr:(1.000e-04,)] [eta: 8:01:22, time (data): 1.413 (0.006)] l_g_pix: 3.9935e-02 l_g_percep: 8.8753e+00 l_g_gan: 2.2546e-01 l_g_edge: 5.7291e-02 l_g_flat: 4.7796e-03 l_d_real: 4.7831e-01 out_d_real: 2.9505e+00 l_d_fake: 2.1206e-01 out_d_fake: -2.0424e+00 
+2025-05-16 09:00:33,768 INFO: [train..][epoch: 10, iter:  59,800, lr:(1.000e-04,)] [eta: 7:58:59, time (data): 1.412 (0.007)] l_g_pix: 6.2200e-02 l_g_percep: 1.2442e+01 l_g_gan: 1.8413e-01 l_g_edge: 1.0029e-01 l_g_flat: 6.1233e-03 l_d_real: 3.2373e-01 out_d_real: 3.9267e+00 l_d_fake: 3.2337e-01 out_d_fake: -1.5173e+00 
+2025-05-16 09:02:54,800 INFO: [train..][epoch: 10, iter:  59,900, lr:(1.000e-04,)] [eta: 7:56:36, time (data): 1.411 (0.007)] l_g_pix: 5.5038e-02 l_g_percep: 1.1432e+01 l_g_gan: 2.2252e-01 l_g_edge: 8.9946e-02 l_g_flat: 5.5773e-03 l_d_real: 3.6638e-01 out_d_real: 3.9112e+00 l_d_fake: 2.4618e-01 out_d_fake: -1.9783e+00 
+2025-05-16 09:05:16,597 INFO: [train..][epoch: 10, iter:  60,000, lr:(1.000e-04,)] [eta: 7:54:13, time (data): 1.412 (0.007)] l_g_pix: 4.3277e-02 l_g_percep: 9.3211e+00 l_g_gan: 1.8046e-01 l_g_edge: 6.7269e-02 l_g_flat: 5.6176e-03 l_d_real: 2.1972e-01 out_d_real: 3.2515e+00 l_d_fake: 3.3330e-01 out_d_fake: -1.4711e+00 
+2025-05-16 09:05:16,597 INFO: Saving models and training states.
+2025-05-16 09:07:38,978 INFO: [train..][epoch: 10, iter:  60,100, lr:(1.000e-04,)] [eta: 7:51:51, time (data): 1.408 (0.007)] l_g_pix: 5.4247e-02 l_g_percep: 1.1698e+01 l_g_gan: 1.6847e-01 l_g_edge: 8.5212e-02 l_g_flat: 6.6491e-03 l_d_real: 3.4033e-01 out_d_real: 3.6733e+00 l_d_fake: 3.4342e-01 out_d_fake: -1.3411e+00 
+2025-05-16 09:09:59,777 INFO: [train..][epoch: 10, iter:  60,200, lr:(1.000e-04,)] [eta: 7:49:28, time (data): 1.407 (0.007)] l_g_pix: 6.1932e-02 l_g_percep: 1.3442e+01 l_g_gan: 1.4145e-01 l_g_edge: 1.0562e-01 l_g_flat: 5.8177e-03 l_d_real: 3.1205e-01 out_d_real: 5.9158e+00 l_d_fake: 6.0714e-01 out_d_fake: -8.0688e-01 
+2025-05-16 09:12:20,832 INFO: [train..][epoch: 10, iter:  60,300, lr:(1.000e-04,)] [eta: 7:47:04, time (data): 1.409 (0.007)] l_g_pix: 5.2732e-02 l_g_percep: 1.0408e+01 l_g_gan: 1.5494e-01 l_g_edge: 7.9194e-02 l_g_flat: 6.7050e-03 l_d_real: 3.9308e-01 out_d_real: 2.9633e+00 l_d_fake: 4.2559e-01 out_d_fake: -1.1234e+00 
+2025-05-16 09:14:41,509 INFO: [train..][epoch: 10, iter:  60,400, lr:(1.000e-04,)] [eta: 7:44:41, time (data): 1.411 (0.008)] l_g_pix: 4.4190e-02 l_g_percep: 9.9832e+00 l_g_gan: 2.6013e-01 l_g_edge: 6.8659e-02 l_g_flat: 6.8591e-03 l_d_real: 1.0318e+00 out_d_real: 2.5306e-01 l_d_fake: 1.4838e-01 out_d_fake: -2.4521e+00 
+2025-05-16 09:17:02,819 INFO: [train..][epoch: 10, iter:  60,500, lr:(1.000e-04,)] [eta: 7:42:18, time (data): 1.412 (0.007)] l_g_pix: 5.4847e-02 l_g_percep: 1.0899e+01 l_g_gan: 2.5124e-01 l_g_edge: 8.7860e-02 l_g_flat: 8.2319e-03 l_d_real: 4.7804e-01 out_d_real: 2.5901e+00 l_d_fake: 1.8028e-01 out_d_fake: -2.3302e+00 
+2025-05-16 09:19:24,213 INFO: [train..][epoch: 10, iter:  60,600, lr:(1.000e-04,)] [eta: 7:39:55, time (data): 1.414 (0.008)] l_g_pix: 5.8717e-02 l_g_percep: 1.1830e+01 l_g_gan: 2.6573e-01 l_g_edge: 8.4681e-02 l_g_flat: 5.6545e-03 l_d_real: 6.2221e-01 out_d_real: 2.1634e+00 l_d_fake: 1.4748e-01 out_d_fake: -2.5082e+00 
+2025-05-16 09:21:45,212 INFO: [train..][epoch: 10, iter:  60,700, lr:(1.000e-04,)] [eta: 7:37:32, time (data): 1.412 (0.007)] l_g_pix: 5.6622e-02 l_g_percep: 1.0563e+01 l_g_gan: 1.8231e-01 l_g_edge: 8.8831e-02 l_g_flat: 6.7565e-03 l_d_real: 3.4925e-01 out_d_real: 3.0846e+00 l_d_fake: 3.2212e-01 out_d_fake: -1.4999e+00 
+2025-05-16 09:24:06,661 INFO: [train..][epoch: 10, iter:  60,800, lr:(1.000e-04,)] [eta: 7:35:09, time (data): 1.418 (0.008)] l_g_pix: 3.7190e-02 l_g_percep: 8.7078e+00 l_g_gan: 1.9719e-01 l_g_edge: 5.4114e-02 l_g_flat: 5.0309e-03 l_d_real: 5.9517e-01 out_d_real: 2.6961e+00 l_d_fake: 2.6144e-01 out_d_fake: -1.7098e+00 
+2025-05-16 09:26:27,399 INFO: [train..][epoch: 10, iter:  60,900, lr:(1.000e-04,)] [eta: 7:32:46, time (data): 1.412 (0.008)] l_g_pix: 4.9199e-02 l_g_percep: 9.7243e+00 l_g_gan: 2.1587e-01 l_g_edge: 7.3992e-02 l_g_flat: 6.2803e-03 l_d_real: 4.9914e-01 out_d_real: 2.6997e+00 l_d_fake: 2.0702e-01 out_d_fake: -1.9509e+00 
+2025-05-16 09:28:49,055 INFO: [train..][epoch: 10, iter:  61,000, lr:(1.000e-04,)] [eta: 7:30:23, time (data): 1.423 (0.009)] l_g_pix: 5.0209e-02 l_g_percep: 1.0963e+01 l_g_gan: 2.1323e-01 l_g_edge: 8.2712e-02 l_g_flat: 5.3982e-03 l_d_real: 4.9259e-01 out_d_real: 3.7662e+00 l_d_fake: 3.1937e-01 out_d_fake: -1.8120e+00 
+2025-05-16 09:31:09,639 INFO: [train..][epoch: 10, iter:  61,100, lr:(1.000e-04,)] [eta: 7:28:00, time (data): 1.413 (0.007)] l_g_pix: 4.0417e-02 l_g_percep: 9.4799e+00 l_g_gan: 1.6598e-01 l_g_edge: 6.2305e-02 l_g_flat: 5.0645e-03 l_d_real: 3.5155e-01 out_d_real: 3.5204e+00 l_d_fake: 4.9133e-01 out_d_fake: -1.1668e+00 
+2025-05-16 09:33:30,662 INFO: [train..][epoch: 10, iter:  61,200, lr:(1.000e-04,)] [eta: 7:25:36, time (data): 1.410 (0.008)] l_g_pix: 5.0342e-02 l_g_percep: 1.0601e+01 l_g_gan: 1.8219e-01 l_g_edge: 7.8739e-02 l_g_flat: 5.2449e-03 l_d_real: 3.4552e-01 out_d_real: 4.6664e+00 l_d_fake: 3.3508e-01 out_d_fake: -1.4863e+00 
+2025-05-16 09:36:34,892 INFO: [train..][epoch: 11, iter:  61,300, lr:(1.000e-04,)] [eta: 7:23:44, time (data): 1.664 (0.257)] l_g_pix: 4.8686e-02 l_g_percep: 9.7310e+00 l_g_gan: 1.6221e-01 l_g_edge: 7.3302e-02 l_g_flat: 5.2503e-03 l_d_real: 3.7011e-01 out_d_real: 4.6472e+00 l_d_fake: 3.9733e-01 out_d_fake: -1.2244e+00 
+2025-05-16 09:38:56,255 INFO: [train..][epoch: 11, iter:  61,400, lr:(1.000e-04,)] [eta: 7:21:21, time (data): 1.414 (0.008)] l_g_pix: 3.7394e-02 l_g_percep: 8.6607e+00 l_g_gan: 2.3327e-01 l_g_edge: 5.8270e-02 l_g_flat: 4.4054e-03 l_d_real: 3.0911e-01 out_d_real: 5.2566e+00 l_d_fake: 1.8954e-01 out_d_fake: -2.1419e+00 
+2025-05-16 09:41:17,257 INFO: [train..][epoch: 11, iter:  61,500, lr:(1.000e-04,)] [eta: 7:18:58, time (data): 1.412 (0.007)] l_g_pix: 5.6189e-02 l_g_percep: 1.0986e+01 l_g_gan: 2.0030e-01 l_g_edge: 8.2665e-02 l_g_flat: 5.9478e-03 l_d_real: 2.9643e-01 out_d_real: 4.6885e+00 l_d_fake: 2.6226e-01 out_d_fake: -1.7397e+00 
+2025-05-16 09:43:38,336 INFO: [train..][epoch: 11, iter:  61,600, lr:(1.000e-04,)] [eta: 7:16:34, time (data): 1.414 (0.008)] l_g_pix: 5.1952e-02 l_g_percep: 1.1822e+01 l_g_gan: 1.6649e-01 l_g_edge: 8.0192e-02 l_g_flat: 5.7175e-03 l_d_real: 2.2932e-01 out_d_real: 4.2253e+00 l_d_fake: 4.0576e-01 out_d_fake: -1.2582e+00 
+2025-05-16 09:45:59,397 INFO: [train..][epoch: 11, iter:  61,700, lr:(1.000e-04,)] [eta: 7:14:11, time (data): 1.412 (0.007)] l_g_pix: 4.7917e-02 l_g_percep: 1.0224e+01 l_g_gan: 1.3525e-01 l_g_edge: 6.6888e-02 l_g_flat: 5.0994e-03 l_d_real: 2.1250e-01 out_d_real: 4.4047e+00 l_d_fake: 5.3127e-01 out_d_fake: -8.2104e-01 
+2025-05-16 09:48:20,334 INFO: [train..][epoch: 11, iter:  61,800, lr:(1.000e-04,)] [eta: 7:11:48, time (data): 1.411 (0.006)] l_g_pix: 4.4811e-02 l_g_percep: 8.1244e+00 l_g_gan: 1.7072e-01 l_g_edge: 6.3046e-02 l_g_flat: 5.9839e-03 l_d_real: 4.7079e-01 out_d_real: 1.4348e+00 l_d_fake: 3.6877e-01 out_d_fake: -1.3380e+00 
+2025-05-16 09:50:40,885 INFO: [train..][epoch: 11, iter:  61,900, lr:(1.000e-04,)] [eta: 7:09:24, time (data): 1.408 (0.007)] l_g_pix: 5.3911e-02 l_g_percep: 1.2210e+01 l_g_gan: 2.0791e-01 l_g_edge: 8.8362e-02 l_g_flat: 6.3236e-03 l_d_real: 2.9731e-01 out_d_real: 3.3590e+00 l_d_fake: 2.4858e-01 out_d_fake: -1.8290e+00 
+2025-05-16 09:53:02,500 INFO: [train..][epoch: 11, iter:  62,000, lr:(1.000e-04,)] [eta: 7:07:01, time (data): 1.415 (0.006)] l_g_pix: 6.4181e-02 l_g_percep: 1.2342e+01 l_g_gan: 1.6491e-01 l_g_edge: 9.5485e-02 l_g_flat: 6.2472e-03 l_d_real: 4.1321e-01 out_d_real: 3.1051e+00 l_d_fake: 3.7463e-01 out_d_fake: -1.2742e+00 
+2025-05-16 09:55:24,420 INFO: [train..][epoch: 11, iter:  62,100, lr:(1.000e-04,)] [eta: 7:04:39, time (data): 1.417 (0.006)] l_g_pix: 3.7224e-02 l_g_percep: 8.9794e+00 l_g_gan: 1.9460e-01 l_g_edge: 5.2651e-02 l_g_flat: 5.0637e-03 l_d_real: 2.5962e-01 out_d_real: 4.1415e+00 l_d_fake: 3.7645e-01 out_d_fake: -1.5691e+00 
+2025-05-16 09:57:44,866 INFO: [train..][epoch: 11, iter:  62,200, lr:(1.000e-04,)] [eta: 7:02:15, time (data): 1.408 (0.005)] l_g_pix: 4.3509e-02 l_g_percep: 9.5154e+00 l_g_gan: 1.8218e-01 l_g_edge: 6.4176e-02 l_g_flat: 5.2201e-03 l_d_real: 4.8896e-01 out_d_real: 3.5540e+00 l_d_fake: 3.7539e-01 out_d_fake: -1.4461e+00 
+2025-05-16 10:00:06,040 INFO: [train..][epoch: 11, iter:  62,300, lr:(1.000e-04,)] [eta: 6:59:52, time (data): 1.410 (0.006)] l_g_pix: 4.6027e-02 l_g_percep: 1.0043e+01 l_g_gan: 2.6202e-01 l_g_edge: 6.7932e-02 l_g_flat: 5.7986e-03 l_d_real: 6.7255e-01 out_d_real: 2.3705e+00 l_d_fake: 1.5444e-01 out_d_fake: -2.4652e+00 
+2025-05-16 10:02:27,567 INFO: [train..][epoch: 11, iter:  62,400, lr:(1.000e-04,)] [eta: 6:57:29, time (data): 1.418 (0.006)] l_g_pix: 6.3734e-02 l_g_percep: 1.3294e+01 l_g_gan: 2.2737e-01 l_g_edge: 1.1286e-01 l_g_flat: 6.6352e-03 l_d_real: 2.7238e-01 out_d_real: 4.7193e+00 l_d_fake: 2.3033e-01 out_d_fake: -2.0421e+00 
+2025-05-16 10:04:48,120 INFO: [train..][epoch: 11, iter:  62,500, lr:(1.000e-04,)] [eta: 6:55:06, time (data): 1.410 (0.007)] l_g_pix: 3.0387e-02 l_g_percep: 7.7433e+00 l_g_gan: 2.1332e-01 l_g_edge: 4.1330e-02 l_g_flat: 6.0977e-03 l_d_real: 5.9598e-01 out_d_real: 1.7422e+00 l_d_fake: 2.5078e-01 out_d_fake: -1.8812e+00 
+2025-05-16 10:07:09,043 INFO: [train..][epoch: 11, iter:  62,600, lr:(1.000e-04,)] [eta: 6:52:42, time (data): 1.405 (0.007)] l_g_pix: 5.1951e-02 l_g_percep: 1.0659e+01 l_g_gan: 1.7543e-01 l_g_edge: 7.4740e-02 l_g_flat: 6.3238e-03 l_d_real: 3.5526e-01 out_d_real: 3.5656e+00 l_d_fake: 3.7278e-01 out_d_fake: -1.3810e+00 
+2025-05-16 10:09:29,932 INFO: [train..][epoch: 11, iter:  62,700, lr:(1.000e-04,)] [eta: 6:50:19, time (data): 1.407 (0.007)] l_g_pix: 5.6590e-02 l_g_percep: 1.0676e+01 l_g_gan: 1.6800e-01 l_g_edge: 8.6843e-02 l_g_flat: 7.3513e-03 l_d_real: 5.1177e-01 out_d_real: 2.1114e+00 l_d_fake: 3.3742e-01 out_d_fake: -1.3423e+00 
+2025-05-16 10:11:51,039 INFO: [train..][epoch: 11, iter:  62,800, lr:(1.000e-04,)] [eta: 6:47:56, time (data): 1.405 (0.008)] l_g_pix: 3.7650e-02 l_g_percep: 8.8201e+00 l_g_gan: 1.6842e-01 l_g_edge: 5.8800e-02 l_g_flat: 6.0242e-03 l_d_real: 3.1533e-01 out_d_real: 4.0420e+00 l_d_fake: 4.0124e-01 out_d_fake: -1.2828e+00 
+2025-05-16 10:14:12,425 INFO: [train..][epoch: 11, iter:  62,900, lr:(1.000e-04,)] [eta: 6:45:33, time (data): 1.410 (0.007)] l_g_pix: 4.5456e-02 l_g_percep: 1.0419e+01 l_g_gan: 2.2652e-01 l_g_edge: 6.7191e-02 l_g_flat: 7.4940e-03 l_d_real: 5.7740e-01 out_d_real: 1.6960e+00 l_d_fake: 1.9960e-01 out_d_fake: -2.0649e+00 
+2025-05-16 10:16:33,930 INFO: [train..][epoch: 11, iter:  63,000, lr:(1.000e-04,)] [eta: 6:43:10, time (data): 1.413 (0.008)] l_g_pix: 4.5038e-02 l_g_percep: 8.7801e+00 l_g_gan: 1.8008e-01 l_g_edge: 6.5661e-02 l_g_flat: 6.6261e-03 l_d_real: 4.5093e-01 out_d_real: 2.5011e+00 l_d_fake: 3.4061e-01 out_d_fake: -1.4592e+00 
+2025-05-16 10:18:54,166 INFO: [train..][epoch: 11, iter:  63,100, lr:(1.000e-04,)] [eta: 6:40:47, time (data): 1.407 (0.007)] l_g_pix: 6.4587e-02 l_g_percep: 1.1286e+01 l_g_gan: 1.9987e-01 l_g_edge: 9.8388e-02 l_g_flat: 6.2279e-03 l_d_real: 3.7323e-01 out_d_real: 3.9172e+00 l_d_fake: 2.6611e-01 out_d_fake: -1.7317e+00 
+2025-05-16 10:21:14,907 INFO: [train..][epoch: 11, iter:  63,200, lr:(1.000e-04,)] [eta: 6:38:24, time (data): 1.400 (0.004)] l_g_pix: 5.3034e-02 l_g_percep: 1.0860e+01 l_g_gan: 1.3605e-01 l_g_edge: 7.9646e-02 l_g_flat: 7.3028e-03 l_d_real: 3.5806e-01 out_d_real: 3.2018e+00 l_d_fake: 6.0090e-01 out_d_fake: -7.5943e-01 
+2025-05-16 10:23:35,808 INFO: [train..][epoch: 11, iter:  63,300, lr:(1.000e-04,)] [eta: 6:36:01, time (data): 1.406 (0.004)] l_g_pix: 4.7367e-02 l_g_percep: 1.0077e+01 l_g_gan: 1.8707e-01 l_g_edge: 7.8759e-02 l_g_flat: 7.6517e-03 l_d_real: 3.8644e-01 out_d_real: 4.3416e+00 l_d_fake: 3.1884e-01 out_d_fake: -1.5503e+00 
+2025-05-16 10:25:56,287 INFO: [train..][epoch: 11, iter:  63,400, lr:(1.000e-04,)] [eta: 6:33:37, time (data): 1.403 (0.003)] l_g_pix: 4.2972e-02 l_g_percep: 9.8805e+00 l_g_gan: 2.2225e-01 l_g_edge: 6.9431e-02 l_g_flat: 6.1257e-03 l_d_real: 2.6701e-01 out_d_real: 5.8821e+00 l_d_fake: 2.3002e-01 out_d_fake: -1.9905e+00 
+2025-05-16 10:28:17,488 INFO: [train..][epoch: 11, iter:  63,500, lr:(1.000e-04,)] [eta: 6:31:14, time (data): 1.409 (0.005)] l_g_pix: 4.8599e-02 l_g_percep: 1.0132e+01 l_g_gan: 2.0946e-01 l_g_edge: 7.3098e-02 l_g_flat: 7.0069e-03 l_d_real: 5.4652e-01 out_d_real: 2.1660e+00 l_d_fake: 2.7028e-01 out_d_fake: -1.8229e+00 
+2025-05-16 10:30:38,641 INFO: [train..][epoch: 11, iter:  63,600, lr:(1.000e-04,)] [eta: 6:28:51, time (data): 1.412 (0.003)] l_g_pix: 3.8675e-02 l_g_percep: 9.3466e+00 l_g_gan: 1.9401e-01 l_g_edge: 5.5566e-02 l_g_flat: 5.2623e-03 l_d_real: 2.6766e-01 out_d_real: 5.0765e+00 l_d_fake: 3.3716e-01 out_d_fake: -1.6015e+00 
+2025-05-16 10:33:00,057 INFO: [train..][epoch: 11, iter:  63,700, lr:(1.000e-04,)] [eta: 6:26:29, time (data): 1.413 (0.005)] l_g_pix: 5.5383e-02 l_g_percep: 1.0990e+01 l_g_gan: 1.8748e-01 l_g_edge: 8.6004e-02 l_g_flat: 7.0518e-03 l_d_real: 3.4553e-01 out_d_real: 4.4063e+00 l_d_fake: 3.0650e-01 out_d_fake: -1.5677e+00 
+2025-05-16 10:35:20,528 INFO: [train..][epoch: 11, iter:  63,800, lr:(1.000e-04,)] [eta: 6:24:05, time (data): 1.405 (0.005)] l_g_pix: 4.7293e-02 l_g_percep: 1.0470e+01 l_g_gan: 2.1961e-01 l_g_edge: 7.0818e-02 l_g_flat: 4.9182e-03 l_d_real: 4.2394e-01 out_d_real: 3.6245e+00 l_d_fake: 2.4469e-01 out_d_fake: -1.9508e+00 
+2025-05-16 10:37:42,082 INFO: [train..][epoch: 11, iter:  63,900, lr:(1.000e-04,)] [eta: 6:21:43, time (data): 1.412 (0.006)] l_g_pix: 5.4374e-02 l_g_percep: 1.0801e+01 l_g_gan: 1.9493e-01 l_g_edge: 8.1762e-02 l_g_flat: 6.4625e-03 l_d_real: 4.4033e-01 out_d_real: 3.1656e+00 l_d_fake: 2.6181e-01 out_d_fake: -1.6872e+00 
+2025-05-16 10:40:03,241 INFO: [train..][epoch: 11, iter:  64,000, lr:(1.000e-04,)] [eta: 6:19:20, time (data): 1.417 (0.007)] l_g_pix: 4.6919e-02 l_g_percep: 1.1137e+01 l_g_gan: 2.5969e-01 l_g_edge: 7.7872e-02 l_g_flat: 5.0763e-03 l_d_real: 4.0546e-01 out_d_real: 4.1871e+00 l_d_fake: 1.5606e-01 out_d_fake: -2.4390e+00 
+2025-05-16 10:42:24,085 INFO: [train..][epoch: 11, iter:  64,100, lr:(1.000e-04,)] [eta: 6:16:57, time (data): 1.411 (0.007)] l_g_pix: 5.9644e-02 l_g_percep: 1.1233e+01 l_g_gan: 1.8481e-01 l_g_edge: 8.3492e-02 l_g_flat: 8.0590e-03 l_d_real: 4.2518e-01 out_d_real: 2.2453e+00 l_d_fake: 3.7279e-01 out_d_fake: -1.4741e+00 
+2025-05-16 10:44:44,488 INFO: [train..][epoch: 11, iter:  64,200, lr:(1.000e-04,)] [eta: 6:14:34, time (data): 1.407 (0.008)] l_g_pix: 5.4340e-02 l_g_percep: 1.1405e+01 l_g_gan: 2.1413e-01 l_g_edge: 8.4088e-02 l_g_flat: 5.5196e-03 l_d_real: 3.8796e-01 out_d_real: 3.5424e+00 l_d_fake: 2.5363e-01 out_d_fake: -1.8868e+00 
+2025-05-16 10:47:05,325 INFO: [train..][epoch: 11, iter:  64,300, lr:(1.000e-04,)] [eta: 6:12:11, time (data): 1.408 (0.006)] l_g_pix: 4.4537e-02 l_g_percep: 1.0028e+01 l_g_gan: 1.9172e-01 l_g_edge: 6.7884e-02 l_g_flat: 6.4107e-03 l_d_real: 4.4494e-01 out_d_real: 2.3084e+00 l_d_fake: 3.1294e-01 out_d_fake: -1.6033e+00 
+2025-05-16 10:49:26,211 INFO: [train..][epoch: 11, iter:  64,400, lr:(1.000e-04,)] [eta: 6:09:48, time (data): 1.400 (0.005)] l_g_pix: 5.7815e-02 l_g_percep: 1.1837e+01 l_g_gan: 1.7566e-01 l_g_edge: 8.8682e-02 l_g_flat: 8.7272e-03 l_d_real: 3.7000e-01 out_d_real: 4.8063e+00 l_d_fake: 3.8937e-01 out_d_fake: -1.3666e+00 
+2025-05-16 10:51:47,888 INFO: [train..][epoch: 11, iter:  64,500, lr:(1.000e-04,)] [eta: 6:07:25, time (data): 1.411 (0.007)] l_g_pix: 3.9766e-02 l_g_percep: 9.4260e+00 l_g_gan: 2.1612e-01 l_g_edge: 5.3591e-02 l_g_flat: 7.0406e-03 l_d_real: 4.2527e-01 out_d_real: 2.3062e+00 l_d_fake: 2.2446e-01 out_d_fake: -1.9352e+00 
+2025-05-16 10:54:08,830 INFO: [train..][epoch: 11, iter:  64,600, lr:(1.000e-04,)] [eta: 6:05:02, time (data): 1.409 (0.006)] l_g_pix: 5.1300e-02 l_g_percep: 1.0131e+01 l_g_gan: 1.5748e-01 l_g_edge: 7.7179e-02 l_g_flat: 7.0842e-03 l_d_real: 3.4355e-01 out_d_real: 3.2769e+00 l_d_fake: 4.0876e-01 out_d_fake: -1.1654e+00 
+2025-05-16 10:56:29,503 INFO: [train..][epoch: 11, iter:  64,700, lr:(1.000e-04,)] [eta: 6:02:39, time (data): 1.408 (0.007)] l_g_pix: 4.7218e-02 l_g_percep: 9.5890e+00 l_g_gan: 1.4252e-01 l_g_edge: 6.6325e-02 l_g_flat: 5.7818e-03 l_d_real: 3.1881e-01 out_d_real: 4.2979e+00 l_d_fake: 5.0963e-01 out_d_fake: -9.1533e-01 
+2025-05-16 10:58:49,991 INFO: [train..][epoch: 11, iter:  64,800, lr:(1.000e-04,)] [eta: 6:00:16, time (data): 1.407 (0.010)] l_g_pix: 4.2101e-02 l_g_percep: 8.3372e+00 l_g_gan: 1.9208e-01 l_g_edge: 5.9540e-02 l_g_flat: 4.2194e-03 l_d_real: 4.6118e-01 out_d_real: 2.2937e+00 l_d_fake: 3.3553e-01 out_d_fake: -1.5847e+00 
+2025-05-16 11:01:11,351 INFO: [train..][epoch: 11, iter:  64,900, lr:(1.000e-04,)] [eta: 5:57:53, time (data): 1.411 (0.008)] l_g_pix: 5.3304e-02 l_g_percep: 1.1412e+01 l_g_gan: 1.9599e-01 l_g_edge: 8.6092e-02 l_g_flat: 5.1739e-03 l_d_real: 3.1657e-01 out_d_real: 3.5201e+00 l_d_fake: 2.7360e-01 out_d_fake: -1.6856e+00 
+2025-05-16 11:03:31,874 INFO: [train..][epoch: 11, iter:  65,000, lr:(1.000e-04,)] [eta: 5:55:30, time (data): 1.401 (0.007)] l_g_pix: 4.8360e-02 l_g_percep: 9.8177e+00 l_g_gan: 2.2422e-01 l_g_edge: 6.9398e-02 l_g_flat: 5.9156e-03 l_d_real: 5.7600e-01 out_d_real: 1.8813e+00 l_d_fake: 2.3483e-01 out_d_fake: -2.0064e+00 
+2025-05-16 11:03:31,874 INFO: Saving models and training states.
+2025-05-16 11:05:53,464 INFO: [train..][epoch: 11, iter:  65,100, lr:(1.000e-04,)] [eta: 5:53:08, time (data): 1.404 (0.006)] l_g_pix: 3.6331e-02 l_g_percep: 7.1852e+00 l_g_gan: 1.8363e-01 l_g_edge: 4.5567e-02 l_g_flat: 4.1197e-03 l_d_real: 4.3893e-01 out_d_real: 2.4979e+00 l_d_fake: 2.9694e-01 out_d_fake: -1.5391e+00 
+2025-05-16 11:08:14,318 INFO: [train..][epoch: 11, iter:  65,200, lr:(1.000e-04,)] [eta: 5:50:45, time (data): 1.419 (0.006)] l_g_pix: 4.5721e-02 l_g_percep: 9.3525e+00 l_g_gan: 2.0201e-01 l_g_edge: 6.0814e-02 l_g_flat: 5.5971e-03 l_d_real: 3.8416e-01 out_d_real: 4.0641e+00 l_d_fake: 2.7800e-01 out_d_fake: -1.7415e+00 
+2025-05-16 11:10:35,361 INFO: [train..][epoch: 11, iter:  65,300, lr:(1.000e-04,)] [eta: 5:48:22, time (data): 1.413 (0.007)] l_g_pix: 4.7277e-02 l_g_percep: 1.0486e+01 l_g_gan: 1.8779e-01 l_g_edge: 7.5529e-02 l_g_flat: 5.8430e-03 l_d_real: 3.1984e-01 out_d_real: 4.5620e+00 l_d_fake: 3.4207e-01 out_d_fake: -1.5356e+00 
+2025-05-16 11:12:56,709 INFO: [train..][epoch: 11, iter:  65,400, lr:(1.000e-04,)] [eta: 5:45:59, time (data): 1.416 (0.006)] l_g_pix: 4.7934e-02 l_g_percep: 1.0715e+01 l_g_gan: 1.8902e-01 l_g_edge: 7.1959e-02 l_g_flat: 6.0302e-03 l_d_real: 2.3487e-01 out_d_real: 4.0055e+00 l_d_fake: 3.0226e-01 out_d_fake: -1.5869e+00 
+2025-05-16 11:15:17,774 INFO: [train..][epoch: 11, iter:  65,500, lr:(1.000e-04,)] [eta: 5:43:37, time (data): 1.412 (0.006)] l_g_pix: 5.6231e-02 l_g_percep: 9.6697e+00 l_g_gan: 2.1621e-01 l_g_edge: 7.4456e-02 l_g_flat: 7.5919e-03 l_d_real: 5.8878e-01 out_d_real: 2.4818e+00 l_d_fake: 2.2659e-01 out_d_fake: -1.9345e+00 
+2025-05-16 11:17:38,086 INFO: [train..][epoch: 11, iter:  65,600, lr:(1.000e-04,)] [eta: 5:41:14, time (data): 1.401 (0.008)] l_g_pix: 3.8756e-02 l_g_percep: 8.3628e+00 l_g_gan: 1.8670e-01 l_g_edge: 5.4914e-02 l_g_flat: 5.1280e-03 l_d_real: 4.7939e-01 out_d_real: 2.1337e+00 l_d_fake: 2.5544e-01 out_d_fake: -1.6111e+00 
+2025-05-16 11:19:59,031 INFO: [train..][epoch: 11, iter:  65,700, lr:(1.000e-04,)] [eta: 5:38:51, time (data): 1.407 (0.007)] l_g_pix: 5.5105e-02 l_g_percep: 1.0760e+01 l_g_gan: 1.9758e-01 l_g_edge: 8.5499e-02 l_g_flat: 6.7236e-03 l_d_real: 3.0581e-01 out_d_real: 3.3529e+00 l_d_fake: 2.9151e-01 out_d_fake: -1.6837e+00 
+2025-05-16 11:22:19,730 INFO: [train..][epoch: 11, iter:  65,800, lr:(1.000e-04,)] [eta: 5:36:28, time (data): 1.410 (0.008)] l_g_pix: 4.2372e-02 l_g_percep: 9.8149e+00 l_g_gan: 1.9609e-01 l_g_edge: 6.3734e-02 l_g_flat: 4.9532e-03 l_d_real: 3.1093e-01 out_d_real: 3.2791e+00 l_d_fake: 2.6035e-01 out_d_fake: -1.7000e+00 
+2025-05-16 11:24:40,469 INFO: [train..][epoch: 11, iter:  65,900, lr:(1.000e-04,)] [eta: 5:34:05, time (data): 1.408 (0.007)] l_g_pix: 4.6214e-02 l_g_percep: 9.4098e+00 l_g_gan: 1.8223e-01 l_g_edge: 7.4080e-02 l_g_flat: 6.2914e-03 l_d_real: 3.0385e-01 out_d_real: 3.8042e+00 l_d_fake: 3.1965e-01 out_d_fake: -1.5018e+00 
+2025-05-16 11:27:02,549 INFO: [train..][epoch: 11, iter:  66,000, lr:(1.000e-04,)] [eta: 5:31:43, time (data): 1.419 (0.008)] l_g_pix: 5.1558e-02 l_g_percep: 1.1778e+01 l_g_gan: 1.5556e-01 l_g_edge: 8.2012e-02 l_g_flat: 7.0646e-03 l_d_real: 2.1268e-01 out_d_real: 4.4762e+00 l_d_fake: 4.9152e-01 out_d_fake: -1.0638e+00 
+2025-05-16 11:29:24,058 INFO: [train..][epoch: 11, iter:  66,100, lr:(1.000e-04,)] [eta: 5:29:20, time (data): 1.416 (0.006)] l_g_pix: 5.0227e-02 l_g_percep: 1.0776e+01 l_g_gan: 2.5901e-01 l_g_edge: 7.5874e-02 l_g_flat: 4.2430e-03 l_d_real: 5.3908e-01 out_d_real: 5.1309e+00 l_d_fake: 1.6801e-01 out_d_fake: -2.4207e+00 
+2025-05-16 11:31:44,763 INFO: [train..][epoch: 11, iter:  66,200, lr:(1.000e-04,)] [eta: 5:26:58, time (data): 1.409 (0.007)] l_g_pix: 6.6275e-02 l_g_percep: 1.4384e+01 l_g_gan: 2.0995e-01 l_g_edge: 1.0862e-01 l_g_flat: 6.4727e-03 l_d_real: 3.1696e-01 out_d_real: 3.9847e+00 l_d_fake: 2.8282e-01 out_d_fake: -1.8158e+00 
+2025-05-16 11:34:05,618 INFO: [train..][epoch: 11, iter:  66,300, lr:(1.000e-04,)] [eta: 5:24:35, time (data): 1.409 (0.007)] l_g_pix: 5.1464e-02 l_g_percep: 1.0503e+01 l_g_gan: 2.5803e-01 l_g_edge: 7.7498e-02 l_g_flat: 5.8116e-03 l_d_real: 5.5944e-01 out_d_real: 2.1891e+00 l_d_fake: 1.8001e-01 out_d_fake: -2.3983e+00 
+2025-05-16 11:36:25,974 INFO: [train..][epoch: 11, iter:  66,400, lr:(1.000e-04,)] [eta: 5:22:12, time (data): 1.401 (0.007)] l_g_pix: 4.0733e-02 l_g_percep: 9.4128e+00 l_g_gan: 1.9476e-01 l_g_edge: 6.1848e-02 l_g_flat: 6.9423e-03 l_d_real: 4.2418e-01 out_d_real: 2.1375e+00 l_d_fake: 3.0756e-01 out_d_fake: -1.6388e+00 
+2025-05-16 11:39:31,424 INFO: [train..][epoch: 12, iter:  66,500, lr:(1.000e-04,)] [eta: 5:20:08, time (data): 1.716 (0.310)] l_g_pix: 3.8639e-02 l_g_percep: 8.7646e+00 l_g_gan: 1.5096e-01 l_g_edge: 5.7514e-02 l_g_flat: 4.2856e-03 l_d_real: 3.0506e-01 out_d_real: 4.0081e+00 l_d_fake: 4.2489e-01 out_d_fake: -1.0844e+00 
+2025-05-16 11:41:52,474 INFO: [train..][epoch: 12, iter:  66,600, lr:(1.000e-04,)] [eta: 5:17:45, time (data): 1.404 (0.007)] l_g_pix: 5.5826e-02 l_g_percep: 1.0042e+01 l_g_gan: 2.1299e-01 l_g_edge: 7.3527e-02 l_g_flat: 6.5045e-03 l_d_real: 4.5283e-01 out_d_real: 3.4224e+00 l_d_fake: 3.0463e-01 out_d_fake: -1.8241e+00 
+2025-05-16 11:44:13,523 INFO: [train..][epoch: 12, iter:  66,700, lr:(1.000e-04,)] [eta: 5:15:23, time (data): 1.409 (0.005)] l_g_pix: 6.2878e-02 l_g_percep: 1.4090e+01 l_g_gan: 1.5399e-01 l_g_edge: 1.0020e-01 l_g_flat: 7.0632e-03 l_d_real: 1.2916e-01 out_d_real: 7.2306e+00 l_d_fake: 5.7556e-01 out_d_fake: -9.6385e-01 
+2025-05-16 11:46:34,011 INFO: [train..][epoch: 12, iter:  66,800, lr:(1.000e-04,)] [eta: 5:13:00, time (data): 1.404 (0.006)] l_g_pix: 5.0682e-02 l_g_percep: 1.0803e+01 l_g_gan: 2.4767e-01 l_g_edge: 7.7150e-02 l_g_flat: 6.6318e-03 l_d_real: 3.7368e-01 out_d_real: 4.5288e+00 l_d_fake: 1.8117e-01 out_d_fake: -2.2942e+00 
+2025-05-16 11:48:55,849 INFO: [train..][epoch: 12, iter:  66,900, lr:(1.000e-04,)] [eta: 5:10:37, time (data): 1.414 (0.007)] l_g_pix: 6.1273e-02 l_g_percep: 1.2746e+01 l_g_gan: 1.4691e-01 l_g_edge: 9.6950e-02 l_g_flat: 6.5678e-03 l_d_real: 2.1166e-01 out_d_real: 5.1908e+00 l_d_fake: 5.4397e-01 out_d_fake: -9.2454e-01 
+2025-05-16 11:51:16,546 INFO: [train..][epoch: 12, iter:  67,000, lr:(1.000e-04,)] [eta: 5:08:14, time (data): 1.405 (0.007)] l_g_pix: 3.4527e-02 l_g_percep: 8.1671e+00 l_g_gan: 1.4945e-01 l_g_edge: 4.7734e-02 l_g_flat: 6.6837e-03 l_d_real: 2.2655e-01 out_d_real: 3.7414e+00 l_d_fake: 5.0399e-01 out_d_fake: -9.9040e-01 
+2025-05-16 11:53:36,835 INFO: [train..][epoch: 12, iter:  67,100, lr:(1.000e-04,)] [eta: 5:05:51, time (data): 1.403 (0.006)] l_g_pix: 3.9067e-02 l_g_percep: 8.7499e+00 l_g_gan: 1.6954e-01 l_g_edge: 5.6728e-02 l_g_flat: 5.6073e-03 l_d_real: 3.5822e-01 out_d_real: 3.0154e+00 l_d_fake: 3.4163e-01 out_d_fake: -1.3535e+00 
+2025-05-16 11:55:57,572 INFO: [train..][epoch: 12, iter:  67,200, lr:(1.000e-04,)] [eta: 5:03:28, time (data): 1.405 (0.006)] l_g_pix: 4.2025e-02 l_g_percep: 9.3328e+00 l_g_gan: 1.5230e-01 l_g_edge: 5.8630e-02 l_g_flat: 7.2009e-03 l_d_real: 2.7149e-01 out_d_real: 3.1318e+00 l_d_fake: 4.1484e-01 out_d_fake: -1.1083e+00 
+2025-05-16 11:58:18,065 INFO: [train..][epoch: 12, iter:  67,300, lr:(1.000e-04,)] [eta: 5:01:05, time (data): 1.405 (0.006)] l_g_pix: 5.4417e-02 l_g_percep: 1.1358e+01 l_g_gan: 2.0985e-01 l_g_edge: 8.0178e-02 l_g_flat: 8.4150e-03 l_d_real: 3.5654e-01 out_d_real: 3.8465e+00 l_d_fake: 2.9961e-01 out_d_fake: -1.7977e+00 
+2025-05-16 12:00:38,957 INFO: [train..][epoch: 12, iter:  67,400, lr:(1.000e-04,)] [eta: 4:58:42, time (data): 1.410 (0.007)] l_g_pix: 5.1812e-02 l_g_percep: 1.0044e+01 l_g_gan: 1.9712e-01 l_g_edge: 8.3457e-02 l_g_flat: 7.0733e-03 l_d_real: 2.4172e-01 out_d_real: 5.3635e+00 l_d_fake: 3.0033e-01 out_d_fake: -1.6704e+00 
+2025-05-16 12:02:59,626 INFO: [train..][epoch: 12, iter:  67,500, lr:(1.000e-04,)] [eta: 4:56:20, time (data): 1.408 (0.007)] l_g_pix: 5.9659e-02 l_g_percep: 1.1658e+01 l_g_gan: 2.4186e-01 l_g_edge: 9.9286e-02 l_g_flat: 7.5611e-03 l_d_real: 4.7246e-01 out_d_real: 3.9886e+00 l_d_fake: 2.1396e-01 out_d_fake: -2.2037e+00 
+2025-05-16 12:05:19,919 INFO: [train..][epoch: 12, iter:  67,600, lr:(1.000e-04,)] [eta: 4:53:57, time (data): 1.405 (0.008)] l_g_pix: 4.4969e-02 l_g_percep: 9.6102e+00 l_g_gan: 1.9351e-01 l_g_edge: 6.1129e-02 l_g_flat: 6.0684e-03 l_d_real: 4.6642e-01 out_d_real: 2.2557e+00 l_d_fake: 3.6774e-01 out_d_fake: -1.5665e+00 
+2025-05-16 12:07:40,954 INFO: [train..][epoch: 12, iter:  67,700, lr:(1.000e-04,)] [eta: 4:51:34, time (data): 1.409 (0.007)] l_g_pix: 6.2692e-02 l_g_percep: 1.2894e+01 l_g_gan: 1.7816e-01 l_g_edge: 1.0129e-01 l_g_flat: 6.7934e-03 l_d_real: 2.6198e-01 out_d_real: 4.1026e+00 l_d_fake: 3.7664e-01 out_d_fake: -1.4042e+00 
+2025-05-16 12:10:01,781 INFO: [train..][epoch: 12, iter:  67,800, lr:(1.000e-04,)] [eta: 4:49:11, time (data): 1.404 (0.011)] l_g_pix: 4.5078e-02 l_g_percep: 9.6693e+00 l_g_gan: 1.2885e-01 l_g_edge: 6.4187e-02 l_g_flat: 6.8632e-03 l_d_real: 2.3105e-01 out_d_real: 3.3998e+00 l_d_fake: 5.6572e-01 out_d_fake: -7.2203e-01 
+2025-05-16 12:12:22,617 INFO: [train..][epoch: 12, iter:  67,900, lr:(1.000e-04,)] [eta: 4:46:48, time (data): 1.407 (0.008)] l_g_pix: 5.1956e-02 l_g_percep: 1.0185e+01 l_g_gan: 2.3033e-01 l_g_edge: 7.9235e-02 l_g_flat: 7.3064e-03 l_d_real: 3.5062e-01 out_d_real: 2.7695e+00 l_d_fake: 2.2437e-01 out_d_fake: -2.0782e+00 
+2025-05-16 12:14:43,178 INFO: [train..][epoch: 12, iter:  68,000, lr:(1.000e-04,)] [eta: 4:44:26, time (data): 1.406 (0.008)] l_g_pix: 4.1340e-02 l_g_percep: 8.8386e+00 l_g_gan: 1.6822e-01 l_g_edge: 5.6878e-02 l_g_flat: 6.8394e-03 l_d_real: 4.7111e-01 out_d_real: 1.4908e+00 l_d_fake: 3.7417e-01 out_d_fake: -1.3079e+00 
+2025-05-16 12:17:03,597 INFO: [train..][epoch: 12, iter:  68,100, lr:(1.000e-04,)] [eta: 4:42:03, time (data): 1.405 (0.004)] l_g_pix: 7.0188e-02 l_g_percep: 1.3647e+01 l_g_gan: 1.8924e-01 l_g_edge: 1.1313e-01 l_g_flat: 6.6429e-03 l_d_real: 2.4999e-01 out_d_real: 4.3214e+00 l_d_fake: 3.2387e-01 out_d_fake: -1.5674e+00 
+2025-05-16 12:19:24,879 INFO: [train..][epoch: 12, iter:  68,200, lr:(1.000e-04,)] [eta: 4:39:40, time (data): 1.419 (0.005)] l_g_pix: 3.1060e-02 l_g_percep: 7.4200e+00 l_g_gan: 2.0560e-01 l_g_edge: 4.4756e-02 l_g_flat: 3.8685e-03 l_d_real: 2.9718e-01 out_d_real: 3.8484e+00 l_d_fake: 2.7384e-01 out_d_fake: -1.7816e+00 
+2025-05-16 12:21:45,201 INFO: [train..][epoch: 12, iter:  68,300, lr:(1.000e-04,)] [eta: 4:37:17, time (data): 1.407 (0.004)] l_g_pix: 5.1508e-02 l_g_percep: 1.0016e+01 l_g_gan: 1.8012e-01 l_g_edge: 7.2826e-02 l_g_flat: 6.1533e-03 l_d_real: 4.0303e-01 out_d_real: 2.3606e+00 l_d_fake: 4.1015e-01 out_d_fake: -1.3905e+00 
+2025-05-16 12:24:06,344 INFO: [train..][epoch: 12, iter:  68,400, lr:(1.000e-04,)] [eta: 4:34:55, time (data): 1.413 (0.005)] l_g_pix: 4.2412e-02 l_g_percep: 1.0226e+01 l_g_gan: 1.8318e-01 l_g_edge: 6.1438e-02 l_g_flat: 5.5466e-03 l_d_real: 3.2163e-01 out_d_real: 3.5744e+00 l_d_fake: 3.0813e-01 out_d_fake: -1.5233e+00 
+2025-05-16 12:26:27,587 INFO: [train..][epoch: 12, iter:  68,500, lr:(1.000e-04,)] [eta: 4:32:32, time (data): 1.412 (0.005)] l_g_pix: 5.8003e-02 l_g_percep: 1.2887e+01 l_g_gan: 1.8057e-01 l_g_edge: 8.8999e-02 l_g_flat: 5.7150e-03 l_d_real: 2.7228e-01 out_d_real: 4.1802e+00 l_d_fake: 3.6934e-01 out_d_fake: -1.4358e+00 
+2025-05-16 12:28:48,328 INFO: [train..][epoch: 12, iter:  68,600, lr:(1.000e-04,)] [eta: 4:30:09, time (data): 1.403 (0.002)] l_g_pix: 3.6279e-02 l_g_percep: 9.0012e+00 l_g_gan: 2.1420e-01 l_g_edge: 5.9717e-02 l_g_flat: 4.9279e-03 l_d_real: 4.1398e-01 out_d_real: 2.7665e+00 l_d_fake: 2.1796e-01 out_d_fake: -1.9236e+00 
+2025-05-16 12:31:10,220 INFO: [train..][epoch: 12, iter:  68,700, lr:(1.000e-04,)] [eta: 4:27:47, time (data): 1.415 (0.005)] l_g_pix: 4.7284e-02 l_g_percep: 1.1024e+01 l_g_gan: 1.3895e-01 l_g_edge: 6.8226e-02 l_g_flat: 5.4945e-03 l_d_real: 2.2690e-01 out_d_real: 4.8352e+00 l_d_fake: 4.8792e-01 out_d_fake: -9.0149e-01 
+2025-05-16 12:33:31,061 INFO: [train..][epoch: 12, iter:  68,800, lr:(1.000e-04,)] [eta: 4:25:24, time (data): 1.406 (0.006)] l_g_pix: 5.7585e-02 l_g_percep: 1.1777e+01 l_g_gan: 1.9744e-01 l_g_edge: 8.7241e-02 l_g_flat: 6.6080e-03 l_d_real: 2.4359e-01 out_d_real: 3.9276e+00 l_d_fake: 3.7168e-01 out_d_fake: -1.6021e+00 
+2025-05-16 12:35:52,447 INFO: [train..][epoch: 12, iter:  68,900, lr:(1.000e-04,)] [eta: 4:23:02, time (data): 1.412 (0.008)] l_g_pix: 3.9992e-02 l_g_percep: 8.8446e+00 l_g_gan: 1.8950e-01 l_g_edge: 5.6767e-02 l_g_flat: 5.9433e-03 l_d_real: 4.3281e-01 out_d_real: 3.0246e+00 l_d_fake: 3.3335e-01 out_d_fake: -1.5609e+00 
+2025-05-16 12:38:13,121 INFO: [train..][epoch: 12, iter:  69,000, lr:(1.000e-04,)] [eta: 4:20:39, time (data): 1.408 (0.012)] l_g_pix: 5.1317e-02 l_g_percep: 1.0896e+01 l_g_gan: 1.4759e-01 l_g_edge: 8.1926e-02 l_g_flat: 5.0653e-03 l_d_real: 1.7441e-01 out_d_real: 5.3569e+00 l_d_fake: 5.0154e-01 out_d_fake: -9.7394e-01 
+2025-05-16 12:40:32,764 INFO: [train..][epoch: 12, iter:  69,100, lr:(1.000e-04,)] [eta: 4:18:16, time (data): 1.399 (0.008)] l_g_pix: 4.0407e-02 l_g_percep: 1.0252e+01 l_g_gan: 1.8717e-01 l_g_edge: 5.3264e-02 l_g_flat: 6.1240e-03 l_d_real: 2.9631e-01 out_d_real: 3.1731e+00 l_d_fake: 3.0063e-01 out_d_fake: -1.5701e+00 
+2025-05-16 12:42:53,820 INFO: [train..][epoch: 12, iter:  69,200, lr:(1.000e-04,)] [eta: 4:15:54, time (data): 1.411 (0.007)] l_g_pix: 5.6965e-02 l_g_percep: 1.0264e+01 l_g_gan: 1.8643e-01 l_g_edge: 8.1911e-02 l_g_flat: 5.9495e-03 l_d_real: 4.8989e-01 out_d_real: 4.0831e+00 l_d_fake: 3.9855e-01 out_d_fake: -1.4652e+00 
+2025-05-16 12:45:14,308 INFO: [train..][epoch: 12, iter:  69,300, lr:(1.000e-04,)] [eta: 4:13:31, time (data): 1.406 (0.008)] l_g_pix: 3.7947e-02 l_g_percep: 8.5846e+00 l_g_gan: 2.3141e-01 l_g_edge: 5.1256e-02 l_g_flat: 4.6419e-03 l_d_real: 4.4581e-01 out_d_real: 2.9933e+00 l_d_fake: 1.9440e-01 out_d_fake: -2.1186e+00 
+2025-05-16 12:47:35,183 INFO: [train..][epoch: 12, iter:  69,400, lr:(1.000e-04,)] [eta: 4:11:08, time (data): 1.407 (0.008)] l_g_pix: 5.3747e-02 l_g_percep: 1.1253e+01 l_g_gan: 1.4984e-01 l_g_edge: 8.3620e-02 l_g_flat: 6.2430e-03 l_d_real: 2.5137e-01 out_d_real: 3.8015e+00 l_d_fake: 4.6411e-01 out_d_fake: -1.0340e+00 
+2025-05-16 12:49:55,965 INFO: [train..][epoch: 12, iter:  69,500, lr:(1.000e-04,)] [eta: 4:08:46, time (data): 1.408 (0.007)] l_g_pix: 3.9979e-02 l_g_percep: 9.0543e+00 l_g_gan: 1.8115e-01 l_g_edge: 5.8171e-02 l_g_flat: 4.6500e-03 l_d_real: 4.9737e-01 out_d_real: 2.9882e+00 l_d_fake: 3.1785e-01 out_d_fake: -1.4932e+00 
+2025-05-16 12:52:16,980 INFO: [train..][epoch: 12, iter:  69,600, lr:(1.000e-04,)] [eta: 4:06:23, time (data): 1.404 (0.006)] l_g_pix: 5.3842e-02 l_g_percep: 1.0367e+01 l_g_gan: 2.3733e-01 l_g_edge: 7.5463e-02 l_g_flat: 5.8463e-03 l_d_real: 4.0285e-01 out_d_real: 2.9938e+00 l_d_fake: 1.8542e-01 out_d_fake: -2.1870e+00 
+2025-05-16 12:54:37,901 INFO: [train..][epoch: 12, iter:  69,700, lr:(1.000e-04,)] [eta: 4:04:01, time (data): 1.408 (0.006)] l_g_pix: 4.0188e-02 l_g_percep: 8.5757e+00 l_g_gan: 2.0461e-01 l_g_edge: 6.1428e-02 l_g_flat: 5.4532e-03 l_d_real: 3.9975e-01 out_d_real: 3.5983e+00 l_d_fake: 2.4899e-01 out_d_fake: -1.7968e+00 
+2025-05-16 12:56:58,496 INFO: [train..][epoch: 12, iter:  69,800, lr:(1.000e-04,)] [eta: 4:01:38, time (data): 1.406 (0.009)] l_g_pix: 5.8293e-02 l_g_percep: 1.1760e+01 l_g_gan: 2.1615e-01 l_g_edge: 8.3907e-02 l_g_flat: 7.0379e-03 l_d_real: 5.6600e-01 out_d_real: 1.8201e+00 l_d_fake: 2.4296e-01 out_d_fake: -1.9173e+00 
+2025-05-16 12:59:20,337 INFO: [train..][epoch: 12, iter:  69,900, lr:(1.000e-04,)] [eta: 3:59:16, time (data): 1.416 (0.006)] l_g_pix: 4.3415e-02 l_g_percep: 1.0033e+01 l_g_gan: 1.6572e-01 l_g_edge: 6.7378e-02 l_g_flat: 7.0606e-03 l_d_real: 4.0348e-01 out_d_real: 2.6662e+00 l_d_fake: 3.5484e-01 out_d_fake: -1.3016e+00 
+2025-05-16 13:01:42,718 INFO: [train..][epoch: 12, iter:  70,000, lr:(1.000e-04,)] [eta: 3:56:54, time (data): 1.407 (0.007)] l_g_pix: 5.8673e-02 l_g_percep: 1.0731e+01 l_g_gan: 2.2217e-01 l_g_edge: 8.7915e-02 l_g_flat: 7.3816e-03 l_d_real: 4.1548e-01 out_d_real: 3.5679e+00 l_d_fake: 2.2354e-01 out_d_fake: -1.9977e+00 
+2025-05-16 13:01:42,736 INFO: Saving models and training states.
+2025-05-16 13:04:04,247 INFO: [train..][epoch: 12, iter:  70,100, lr:(1.000e-04,)] [eta: 3:54:31, time (data): 1.405 (0.006)] l_g_pix: 6.1595e-02 l_g_percep: 1.0300e+01 l_g_gan: 2.4842e-01 l_g_edge: 6.9930e-02 l_g_flat: 4.7280e-03 l_d_real: 5.6058e-01 out_d_real: 2.4871e+00 l_d_fake: 1.6181e-01 out_d_fake: -2.3210e+00 
+2025-05-16 13:06:25,532 INFO: [train..][epoch: 12, iter:  70,200, lr:(1.000e-04,)] [eta: 3:52:09, time (data): 1.408 (0.005)] l_g_pix: 5.5314e-02 l_g_percep: 1.2379e+01 l_g_gan: 2.5247e-01 l_g_edge: 9.0905e-02 l_g_flat: 6.0724e-03 l_d_real: 2.8557e-01 out_d_real: 4.5430e+00 l_d_fake: 1.9405e-01 out_d_fake: -2.3294e+00 
+2025-05-16 13:08:46,401 INFO: [train..][epoch: 12, iter:  70,300, lr:(1.000e-04,)] [eta: 3:49:47, time (data): 1.409 (0.007)] l_g_pix: 3.4757e-02 l_g_percep: 8.8047e+00 l_g_gan: 1.6197e-01 l_g_edge: 5.3670e-02 l_g_flat: 4.7794e-03 l_d_real: 2.3078e-01 out_d_real: 4.4886e+00 l_d_fake: 4.1111e-01 out_d_fake: -1.2083e+00 
+2025-05-16 13:11:07,552 INFO: [train..][epoch: 12, iter:  70,400, lr:(1.000e-04,)] [eta: 3:47:24, time (data): 1.411 (0.007)] l_g_pix: 5.0145e-02 l_g_percep: 1.1169e+01 l_g_gan: 2.6840e-01 l_g_edge: 8.1415e-02 l_g_flat: 5.6629e-03 l_d_real: 3.8321e-01 out_d_real: 3.3590e+00 l_d_fake: 1.6279e-01 out_d_fake: -2.5193e+00 
+2025-05-16 13:13:29,645 INFO: [train..][epoch: 12, iter:  70,500, lr:(1.000e-04,)] [eta: 3:45:02, time (data): 1.419 (0.008)] l_g_pix: 4.3887e-02 l_g_percep: 9.9858e+00 l_g_gan: 2.5267e-01 l_g_edge: 6.4926e-02 l_g_flat: 5.8160e-03 l_d_real: 5.1857e-01 out_d_real: 3.0012e+00 l_d_fake: 1.7995e-01 out_d_fake: -2.3457e+00 
+2025-05-16 13:15:51,132 INFO: [train..][epoch: 12, iter:  70,600, lr:(1.000e-04,)] [eta: 3:42:40, time (data): 1.414 (0.008)] l_g_pix: 4.6409e-02 l_g_percep: 1.0527e+01 l_g_gan: 2.1356e-01 l_g_edge: 7.6896e-02 l_g_flat: 7.0441e-03 l_d_real: 3.4133e-01 out_d_real: 3.5143e+00 l_d_fake: 2.8675e-01 out_d_fake: -1.8481e+00 
+2025-05-16 13:18:12,657 INFO: [train..][epoch: 12, iter:  70,700, lr:(1.000e-04,)] [eta: 3:40:17, time (data): 1.415 (0.007)] l_g_pix: 4.6666e-02 l_g_percep: 1.0505e+01 l_g_gan: 1.7820e-01 l_g_edge: 6.9660e-02 l_g_flat: 7.0858e-03 l_d_real: 3.4055e-01 out_d_real: 3.7648e+00 l_d_fake: 3.5596e-01 out_d_fake: -1.4252e+00 
+2025-05-16 13:20:33,762 INFO: [train..][epoch: 12, iter:  70,800, lr:(1.000e-04,)] [eta: 3:37:55, time (data): 1.416 (0.006)] l_g_pix: 6.6066e-02 l_g_percep: 1.2401e+01 l_g_gan: 1.9428e-01 l_g_edge: 9.8932e-02 l_g_flat: 7.0751e-03 l_d_real: 3.3806e-01 out_d_real: 4.1446e+00 l_d_fake: 3.0483e-01 out_d_fake: -1.6374e+00 
+2025-05-16 13:22:54,332 INFO: [train..][epoch: 12, iter:  70,900, lr:(1.000e-04,)] [eta: 3:35:32, time (data): 1.408 (0.006)] l_g_pix: 4.8436e-02 l_g_percep: 1.0695e+01 l_g_gan: 1.7922e-01 l_g_edge: 7.1793e-02 l_g_flat: 6.3549e-03 l_d_real: 3.7230e-01 out_d_real: 2.6537e+00 l_d_fake: 3.7200e-01 out_d_fake: -1.4188e+00 
+2025-05-16 13:25:15,038 INFO: [train..][epoch: 12, iter:  71,000, lr:(1.000e-04,)] [eta: 3:33:10, time (data): 1.398 (0.003)] l_g_pix: 6.5836e-02 l_g_percep: 1.3270e+01 l_g_gan: 1.6673e-01 l_g_edge: 1.0933e-01 l_g_flat: 6.8655e-03 l_d_real: 1.4056e-01 out_d_real: 8.8205e+00 l_d_fake: 6.4063e-01 out_d_fake: -1.0261e+00 
+2025-05-16 13:27:36,210 INFO: [train..][epoch: 12, iter:  71,100, lr:(1.000e-04,)] [eta: 3:30:48, time (data): 1.409 (0.005)] l_g_pix: 4.2390e-02 l_g_percep: 9.4695e+00 l_g_gan: 1.5356e-01 l_g_edge: 6.2271e-02 l_g_flat: 3.5484e-03 l_d_real: 1.4905e-01 out_d_real: 4.1759e+00 l_d_fake: 4.5216e-01 out_d_fake: -1.0829e+00 
+2025-05-16 13:29:57,295 INFO: [train..][epoch: 12, iter:  71,200, lr:(1.000e-04,)] [eta: 3:28:25, time (data): 1.405 (0.005)] l_g_pix: 3.8986e-02 l_g_percep: 7.6219e+00 l_g_gan: 2.0735e-01 l_g_edge: 4.9537e-02 l_g_flat: 5.3043e-03 l_d_real: 3.3402e-01 out_d_real: 3.0197e+00 l_d_fake: 2.5866e-01 out_d_fake: -1.8134e+00 
+2025-05-16 13:32:18,541 INFO: [train..][epoch: 12, iter:  71,300, lr:(1.000e-04,)] [eta: 3:26:03, time (data): 1.411 (0.005)] l_g_pix: 4.3957e-02 l_g_percep: 9.6588e+00 l_g_gan: 1.6616e-01 l_g_edge: 6.4766e-02 l_g_flat: 4.8345e-03 l_d_real: 2.8447e-01 out_d_real: 3.0677e+00 l_d_fake: 3.8973e-01 out_d_fake: -1.2710e+00 
+2025-05-16 13:34:39,583 INFO: [train..][epoch: 12, iter:  71,400, lr:(1.000e-04,)] [eta: 3:23:40, time (data): 1.398 (0.009)] l_g_pix: 6.3267e-02 l_g_percep: 1.2216e+01 l_g_gan: 2.1640e-01 l_g_edge: 1.0424e-01 l_g_flat: 6.1128e-03 l_d_real: 1.7669e-01 out_d_real: 6.9894e+00 l_d_fake: 2.8021e-01 out_d_fake: -1.8825e+00 
+2025-05-16 13:37:00,094 INFO: [train..][epoch: 12, iter:  71,500, lr:(1.000e-04,)] [eta: 3:21:18, time (data): 1.404 (0.006)] l_g_pix: 5.5425e-02 l_g_percep: 1.1245e+01 l_g_gan: 2.0385e-01 l_g_edge: 8.7609e-02 l_g_flat: 7.3753e-03 l_d_real: 2.8474e-01 out_d_real: 3.7985e+00 l_d_fake: 2.9167e-01 out_d_fake: -1.7439e+00 
+2025-05-16 13:39:21,341 INFO: [train..][epoch: 12, iter:  71,600, lr:(1.000e-04,)] [eta: 3:18:56, time (data): 1.411 (0.009)] l_g_pix: 4.3214e-02 l_g_percep: 9.5413e+00 l_g_gan: 2.6109e-01 l_g_edge: 5.8639e-02 l_g_flat: 5.8347e-03 l_d_real: 7.8927e-01 out_d_real: 2.3347e+00 l_d_fake: 1.5588e-01 out_d_fake: -2.4539e+00 
+2025-05-16 13:41:42,203 INFO: [train..][epoch: 12, iter:  71,700, lr:(1.000e-04,)] [eta: 3:16:33, time (data): 1.409 (0.007)] l_g_pix: 4.9849e-02 l_g_percep: 1.0298e+01 l_g_gan: 2.1213e-01 l_g_edge: 7.3063e-02 l_g_flat: 7.7428e-03 l_d_real: 2.7072e-01 out_d_real: 3.3714e+00 l_d_fake: 2.8462e-01 out_d_fake: -1.8361e+00 
+2025-05-16 13:44:47,563 INFO: [train..][epoch: 13, iter:  71,800, lr:(1.000e-04,)] [eta: 3:14:21, time (data): 1.406 (0.008)] l_g_pix: 6.0250e-02 l_g_percep: 1.1801e+01 l_g_gan: 1.3490e-01 l_g_edge: 9.4616e-02 l_g_flat: 7.4257e-03 l_d_real: 3.7913e-01 out_d_real: 3.5977e+00 l_d_fake: 5.1452e-01 out_d_fake: -8.3417e-01 
+2025-05-16 13:47:08,381 INFO: [train..][epoch: 13, iter:  71,900, lr:(1.000e-04,)] [eta: 3:11:58, time (data): 1.408 (0.007)] l_g_pix: 4.8040e-02 l_g_percep: 1.1055e+01 l_g_gan: 1.5963e-01 l_g_edge: 7.7156e-02 l_g_flat: 6.3101e-03 l_d_real: 2.7907e-01 out_d_real: 3.6510e+00 l_d_fake: 4.5673e-01 out_d_fake: -1.1388e+00 
+2025-05-16 13:49:29,054 INFO: [train..][epoch: 13, iter:  72,000, lr:(1.000e-04,)] [eta: 3:09:36, time (data): 1.396 (0.007)] l_g_pix: 6.1593e-02 l_g_percep: 1.2251e+01 l_g_gan: 1.7618e-01 l_g_edge: 1.0392e-01 l_g_flat: 4.7687e-03 l_d_real: 2.0786e-01 out_d_real: 5.8225e+00 l_d_fake: 4.0389e-01 out_d_fake: -1.3572e+00 
+2025-05-16 13:51:50,434 INFO: [train..][epoch: 13, iter:  72,100, lr:(1.000e-04,)] [eta: 3:07:13, time (data): 1.411 (0.007)] l_g_pix: 4.3026e-02 l_g_percep: 9.3956e+00 l_g_gan: 2.3429e-01 l_g_edge: 6.3059e-02 l_g_flat: 7.0583e-03 l_d_real: 4.7084e-01 out_d_real: 2.4383e+00 l_d_fake: 2.2325e-01 out_d_fake: -2.1187e+00 
+2025-05-16 13:54:12,390 INFO: [train..][epoch: 13, iter:  72,200, lr:(1.000e-04,)] [eta: 3:04:51, time (data): 1.412 (0.010)] l_g_pix: 4.3954e-02 l_g_percep: 1.0044e+01 l_g_gan: 1.7653e-01 l_g_edge: 7.1742e-02 l_g_flat: 5.0101e-03 l_d_real: 3.0370e-01 out_d_real: 3.9124e+00 l_d_fake: 4.1025e-01 out_d_fake: -1.3551e+00 
+2025-05-16 13:56:33,446 INFO: [train..][epoch: 13, iter:  72,300, lr:(1.000e-04,)] [eta: 3:02:29, time (data): 1.411 (0.007)] l_g_pix: 4.8278e-02 l_g_percep: 9.5431e+00 l_g_gan: 1.9868e-01 l_g_edge: 7.1682e-02 l_g_flat: 7.2237e-03 l_d_real: 4.2067e-01 out_d_real: 3.2444e+00 l_d_fake: 3.6209e-01 out_d_fake: -1.6240e+00 
+2025-05-16 13:58:55,886 INFO: [train..][epoch: 13, iter:  72,400, lr:(1.000e-04,)] [eta: 3:00:06, time (data): 1.432 (0.009)] l_g_pix: 3.5959e-02 l_g_percep: 7.8687e+00 l_g_gan: 1.7185e-01 l_g_edge: 4.8963e-02 l_g_flat: 6.3095e-03 l_d_real: 5.7187e-01 out_d_real: 1.5848e+00 l_d_fake: 3.2282e-01 out_d_fake: -1.3952e+00 
+2025-05-16 14:01:16,765 INFO: [train..][epoch: 13, iter:  72,500, lr:(1.000e-04,)] [eta: 2:57:44, time (data): 1.411 (0.005)] l_g_pix: 3.8693e-02 l_g_percep: 8.3138e+00 l_g_gan: 2.1185e-01 l_g_edge: 6.0860e-02 l_g_flat: 5.3128e-03 l_d_real: 3.9342e-01 out_d_real: 3.7846e+00 l_d_fake: 2.5632e-01 out_d_fake: -1.8609e+00 
+2025-05-16 14:03:37,823 INFO: [train..][epoch: 13, iter:  72,600, lr:(1.000e-04,)] [eta: 2:55:21, time (data): 1.421 (0.004)] l_g_pix: 3.7448e-02 l_g_percep: 7.9652e+00 l_g_gan: 1.4352e-01 l_g_edge: 5.0140e-02 l_g_flat: 4.5873e-03 l_d_real: 3.0213e-01 out_d_real: 3.5674e+00 l_d_fake: 4.5776e-01 out_d_fake: -9.7793e-01 
+2025-05-16 14:05:59,350 INFO: [train..][epoch: 13, iter:  72,700, lr:(1.000e-04,)] [eta: 2:52:59, time (data): 1.416 (0.006)] l_g_pix: 5.7174e-02 l_g_percep: 1.1731e+01 l_g_gan: 1.9992e-01 l_g_edge: 1.0015e-01 l_g_flat: 6.5345e-03 l_d_real: 1.9059e-01 out_d_real: 5.2092e+00 l_d_fake: 3.0031e-01 out_d_fake: -1.6983e+00 
+2025-05-16 14:08:21,028 INFO: [train..][epoch: 13, iter:  72,800, lr:(1.000e-04,)] [eta: 2:50:37, time (data): 1.407 (0.006)] l_g_pix: 5.3200e-02 l_g_percep: 1.1637e+01 l_g_gan: 1.8573e-01 l_g_edge: 8.6343e-02 l_g_flat: 7.1722e-03 l_d_real: 1.7976e-01 out_d_real: 4.4282e+00 l_d_fake: 3.6851e-01 out_d_fake: -1.4881e+00 
+2025-05-16 14:10:42,665 INFO: [train..][epoch: 13, iter:  72,900, lr:(1.000e-04,)] [eta: 2:48:15, time (data): 1.415 (0.008)] l_g_pix: 6.5526e-02 l_g_percep: 1.2859e+01 l_g_gan: 2.6356e-01 l_g_edge: 1.0702e-01 l_g_flat: 7.2897e-03 l_d_real: 2.2909e-01 out_d_real: 6.0053e+00 l_d_fake: 1.9300e-01 out_d_fake: -2.4414e+00 
+2025-05-16 14:13:03,278 INFO: [train..][epoch: 13, iter:  73,000, lr:(1.000e-04,)] [eta: 2:45:52, time (data): 1.399 (0.005)] l_g_pix: 4.6919e-02 l_g_percep: 9.7774e+00 l_g_gan: 1.9933e-01 l_g_edge: 6.9564e-02 l_g_flat: 6.4088e-03 l_d_real: 4.0355e-01 out_d_real: 2.3601e+00 l_d_fake: 2.6014e-01 out_d_fake: -1.7328e+00 
+2025-05-16 14:15:24,729 INFO: [train..][epoch: 13, iter:  73,100, lr:(1.000e-04,)] [eta: 2:43:30, time (data): 1.413 (0.006)] l_g_pix: 5.6033e-02 l_g_percep: 1.1864e+01 l_g_gan: 2.0811e-01 l_g_edge: 9.0543e-02 l_g_flat: 6.4557e-03 l_d_real: 2.6722e-01 out_d_real: 4.1754e+00 l_d_fake: 2.6540e-01 out_d_fake: -1.8152e+00 
+2025-05-16 14:17:45,404 INFO: [train..][epoch: 13, iter:  73,200, lr:(1.000e-04,)] [eta: 2:41:07, time (data): 1.405 (0.005)] l_g_pix: 5.9463e-02 l_g_percep: 1.1639e+01 l_g_gan: 2.3161e-01 l_g_edge: 8.3585e-02 l_g_flat: 6.4304e-03 l_d_real: 3.8896e-01 out_d_real: 3.0585e+00 l_d_fake: 2.0076e-01 out_d_fake: -2.1148e+00 
+2025-05-16 14:20:06,586 INFO: [train..][epoch: 13, iter:  73,300, lr:(1.000e-04,)] [eta: 2:38:45, time (data): 1.411 (0.007)] l_g_pix: 5.5865e-02 l_g_percep: 1.1713e+01 l_g_gan: 2.1254e-01 l_g_edge: 8.3568e-02 l_g_flat: 6.3216e-03 l_d_real: 4.5525e-01 out_d_real: 3.5560e+00 l_d_fake: 2.5252e-01 out_d_fake: -1.8720e+00 
+2025-05-16 14:22:28,286 INFO: [train..][epoch: 13, iter:  73,400, lr:(1.000e-04,)] [eta: 2:36:23, time (data): 1.417 (0.006)] l_g_pix: 4.6799e-02 l_g_percep: 1.0389e+01 l_g_gan: 2.2623e-01 l_g_edge: 6.9178e-02 l_g_flat: 7.6720e-03 l_d_real: 3.2289e-01 out_d_real: 3.5540e+00 l_d_fake: 3.1162e-01 out_d_fake: -1.9491e+00 
+2025-05-16 14:24:48,928 INFO: [train..][epoch: 13, iter:  73,500, lr:(1.000e-04,)] [eta: 2:34:00, time (data): 1.407 (0.007)] l_g_pix: 4.6602e-02 l_g_percep: 1.0468e+01 l_g_gan: 2.1033e-01 l_g_edge: 7.8724e-02 l_g_flat: 5.2975e-03 l_d_real: 3.4194e-01 out_d_real: 3.5665e+00 l_d_fake: 2.4356e-01 out_d_fake: -1.8594e+00 
+2025-05-16 14:27:09,844 INFO: [train..][epoch: 13, iter:  73,600, lr:(1.000e-04,)] [eta: 2:31:38, time (data): 1.395 (0.004)] l_g_pix: 4.3029e-02 l_g_percep: 9.3890e+00 l_g_gan: 2.0022e-01 l_g_edge: 6.2882e-02 l_g_flat: 5.8243e-03 l_d_real: 3.6745e-01 out_d_real: 2.8997e+00 l_d_fake: 3.0612e-01 out_d_fake: -1.6953e+00 
+2025-05-16 14:29:31,648 INFO: [train..][epoch: 13, iter:  73,700, lr:(1.000e-04,)] [eta: 2:29:15, time (data): 1.416 (0.007)] l_g_pix: 3.7900e-02 l_g_percep: 9.2099e+00 l_g_gan: 1.9893e-01 l_g_edge: 5.6230e-02 l_g_flat: 5.6037e-03 l_d_real: 5.2434e-01 out_d_real: 2.3815e+00 l_d_fake: 3.0224e-01 out_d_fake: -1.6855e+00 
+2025-05-16 14:31:52,588 INFO: [train..][epoch: 13, iter:  73,800, lr:(1.000e-04,)] [eta: 2:26:53, time (data): 1.395 (0.008)] l_g_pix: 6.6424e-02 l_g_percep: 1.3218e+01 l_g_gan: 2.3034e-01 l_g_edge: 1.0254e-01 l_g_flat: 7.7647e-03 l_d_real: 3.8547e-01 out_d_real: 3.0483e+00 l_d_fake: 2.0765e-01 out_d_fake: -2.0951e+00 
+2025-05-16 14:34:13,398 INFO: [train..][epoch: 13, iter:  73,900, lr:(1.000e-04,)] [eta: 2:24:31, time (data): 1.407 (0.008)] l_g_pix: 4.7612e-02 l_g_percep: 1.0282e+01 l_g_gan: 1.8983e-01 l_g_edge: 7.2612e-02 l_g_flat: 4.9484e-03 l_d_real: 1.9820e-01 out_d_real: 3.9336e+00 l_d_fake: 3.2734e-01 out_d_fake: -1.5700e+00 
+2025-05-16 14:36:34,297 INFO: [train..][epoch: 13, iter:  74,000, lr:(1.000e-04,)] [eta: 2:22:08, time (data): 1.413 (0.003)] l_g_pix: 5.6203e-02 l_g_percep: 1.2316e+01 l_g_gan: 1.7720e-01 l_g_edge: 8.6770e-02 l_g_flat: 5.5638e-03 l_d_real: 1.7717e-01 out_d_real: 5.0302e+00 l_d_fake: 3.7784e-01 out_d_fake: -1.3934e+00 
+2025-05-16 14:38:56,240 INFO: [train..][epoch: 13, iter:  74,100, lr:(1.000e-04,)] [eta: 2:19:46, time (data): 1.419 (0.007)] l_g_pix: 4.0183e-02 l_g_percep: 8.6040e+00 l_g_gan: 1.4518e-01 l_g_edge: 5.4690e-02 l_g_flat: 6.1041e-03 l_d_real: 2.7559e-01 out_d_real: 2.6736e+00 l_d_fake: 4.4867e-01 out_d_fake: -1.0028e+00 
+2025-05-16 14:41:17,128 INFO: [train..][epoch: 13, iter:  74,200, lr:(1.000e-04,)] [eta: 2:17:24, time (data): 1.419 (0.004)] l_g_pix: 4.4637e-02 l_g_percep: 9.7019e+00 l_g_gan: 1.6964e-01 l_g_edge: 6.8654e-02 l_g_flat: 5.1933e-03 l_d_real: 2.5165e-01 out_d_real: 4.3541e+00 l_d_fake: 3.7439e-01 out_d_fake: -1.3216e+00 
+2025-05-16 14:43:38,962 INFO: [train..][epoch: 13, iter:  74,300, lr:(1.000e-04,)] [eta: 2:15:02, time (data): 1.418 (0.005)] l_g_pix: 6.2339e-02 l_g_percep: 1.2378e+01 l_g_gan: 1.8384e-01 l_g_edge: 9.1096e-02 l_g_flat: 6.9331e-03 l_d_real: 3.2399e-01 out_d_real: 4.4410e+00 l_d_fake: 3.7063e-01 out_d_fake: -1.4667e+00 
+2025-05-16 14:46:00,124 INFO: [train..][epoch: 13, iter:  74,400, lr:(1.000e-04,)] [eta: 2:12:39, time (data): 1.430 (0.004)] l_g_pix: 3.9456e-02 l_g_percep: 8.2062e+00 l_g_gan: 2.0915e-01 l_g_edge: 4.9656e-02 l_g_flat: 4.8262e-03 l_d_real: 4.6822e-01 out_d_real: 1.9294e+00 l_d_fake: 2.2802e-01 out_d_fake: -1.8628e+00 
+2025-05-16 14:48:20,787 INFO: [train..][epoch: 13, iter:  74,500, lr:(1.000e-04,)] [eta: 2:10:17, time (data): 1.407 (0.008)] l_g_pix: 4.1628e-02 l_g_percep: 8.4699e+00 l_g_gan: 1.8297e-01 l_g_edge: 5.0708e-02 l_g_flat: 5.7534e-03 l_d_real: 3.4799e-01 out_d_real: 2.6890e+00 l_d_fake: 3.1205e-01 out_d_fake: -1.5174e+00 
+2025-05-16 14:50:41,741 INFO: [train..][epoch: 13, iter:  74,600, lr:(1.000e-04,)] [eta: 2:07:55, time (data): 1.427 (0.000)] l_g_pix: 5.1190e-02 l_g_percep: 1.1038e+01 l_g_gan: 2.1739e-01 l_g_edge: 7.1487e-02 l_g_flat: 5.8224e-03 l_d_real: 5.3468e-01 out_d_real: 2.0903e+00 l_d_fake: 2.1470e-01 out_d_fake: -1.9590e+00 
+2025-05-16 14:53:03,311 INFO: [train..][epoch: 13, iter:  74,700, lr:(1.000e-04,)] [eta: 2:05:32, time (data): 1.416 (0.007)] l_g_pix: 4.2369e-02 l_g_percep: 9.3916e+00 l_g_gan: 1.7810e-01 l_g_edge: 6.3414e-02 l_g_flat: 5.2683e-03 l_d_real: 2.5693e-01 out_d_real: 3.3357e+00 l_d_fake: 4.0314e-01 out_d_fake: -1.3777e+00 
+2025-05-16 14:55:25,223 INFO: [train..][epoch: 13, iter:  74,800, lr:(1.000e-04,)] [eta: 2:03:10, time (data): 1.400 (0.000)] l_g_pix: 4.6441e-02 l_g_percep: 1.0385e+01 l_g_gan: 1.5061e-01 l_g_edge: 7.3422e-02 l_g_flat: 6.5593e-03 l_d_real: 2.5717e-01 out_d_real: 3.6275e+00 l_d_fake: 5.1514e-01 out_d_fake: -9.9078e-01 
+2025-05-16 14:57:46,541 INFO: [train..][epoch: 13, iter:  74,900, lr:(1.000e-04,)] [eta: 2:00:48, time (data): 1.413 (0.007)] l_g_pix: 4.7199e-02 l_g_percep: 9.4151e+00 l_g_gan: 1.4232e-01 l_g_edge: 6.9531e-02 l_g_flat: 5.3584e-03 l_d_real: 2.5593e-01 out_d_real: 4.0596e+00 l_d_fake: 5.0124e-01 out_d_fake: -9.2199e-01 
+2025-05-16 15:00:07,764 INFO: [train..][epoch: 13, iter:  75,000, lr:(1.000e-04,)] [eta: 1:58:26, time (data): 1.375 (0.000)] l_g_pix: 4.7296e-02 l_g_percep: 1.0033e+01 l_g_gan: 1.7691e-01 l_g_edge: 7.4319e-02 l_g_flat: 5.3969e-03 l_d_real: 1.6266e-01 out_d_real: 4.3993e+00 l_d_fake: 3.6583e-01 out_d_fake: -1.4030e+00 
+2025-05-16 15:00:07,764 INFO: Saving models and training states.
+2025-05-16 15:02:30,242 INFO: [train..][epoch: 13, iter:  75,100, lr:(1.000e-04,)] [eta: 1:56:03, time (data): 1.414 (0.007)] l_g_pix: 5.1621e-02 l_g_percep: 1.0726e+01 l_g_gan: 1.9114e-01 l_g_edge: 7.3965e-02 l_g_flat: 5.4899e-03 l_d_real: 1.6510e-01 out_d_real: 5.0108e+00 l_d_fake: 3.0939e-01 out_d_fake: -1.6011e+00 
+2025-05-16 15:04:51,056 INFO: [train..][epoch: 13, iter:  75,200, lr:(1.000e-04,)] [eta: 1:53:41, time (data): 1.411 (0.007)] l_g_pix: 5.1176e-02 l_g_percep: 9.9916e+00 l_g_gan: 2.1124e-01 l_g_edge: 7.2343e-02 l_g_flat: 6.1102e-03 l_d_real: 3.4339e-01 out_d_real: 2.9846e+00 l_d_fake: 3.0596e-01 out_d_fake: -1.8055e+00 
+2025-05-16 15:07:12,022 INFO: [train..][epoch: 13, iter:  75,300, lr:(1.000e-04,)] [eta: 1:51:19, time (data): 1.410 (0.007)] l_g_pix: 5.5973e-02 l_g_percep: 1.0779e+01 l_g_gan: 1.7743e-01 l_g_edge: 8.0456e-02 l_g_flat: 6.4229e-03 l_d_real: 2.3822e-01 out_d_real: 3.5641e+00 l_d_fake: 3.3616e-01 out_d_fake: -1.4375e+00 
+2025-05-16 15:09:33,173 INFO: [train..][epoch: 13, iter:  75,400, lr:(1.000e-04,)] [eta: 1:48:57, time (data): 1.411 (0.006)] l_g_pix: 4.4911e-02 l_g_percep: 9.3059e+00 l_g_gan: 1.9313e-01 l_g_edge: 6.7548e-02 l_g_flat: 5.5064e-03 l_d_real: 3.8086e-01 out_d_real: 2.9838e+00 l_d_fake: 3.0803e-01 out_d_fake: -1.6224e+00 
+2025-05-16 15:11:54,229 INFO: [train..][epoch: 13, iter:  75,500, lr:(1.000e-04,)] [eta: 1:46:34, time (data): 1.410 (0.006)] l_g_pix: 5.9956e-02 l_g_percep: 1.2535e+01 l_g_gan: 2.1863e-01 l_g_edge: 8.9158e-02 l_g_flat: 7.9798e-03 l_d_real: 2.8421e-01 out_d_real: 3.9512e+00 l_d_fake: 2.8675e-01 out_d_fake: -1.8989e+00 
+2025-05-16 15:14:15,645 INFO: [train..][epoch: 13, iter:  75,600, lr:(1.000e-04,)] [eta: 1:44:12, time (data): 1.412 (0.006)] l_g_pix: 4.9848e-02 l_g_percep: 1.0597e+01 l_g_gan: 2.1596e-01 l_g_edge: 7.3256e-02 l_g_flat: 6.0388e-03 l_d_real: 3.4255e-01 out_d_real: 3.8074e+00 l_d_fake: 2.7436e-01 out_d_fake: -1.8846e+00 
+2025-05-16 15:16:36,597 INFO: [train..][epoch: 13, iter:  75,700, lr:(1.000e-04,)] [eta: 1:41:50, time (data): 1.410 (0.006)] l_g_pix: 5.3408e-02 l_g_percep: 1.0731e+01 l_g_gan: 2.2857e-01 l_g_edge: 8.0555e-02 l_g_flat: 6.5970e-03 l_d_real: 6.0752e-01 out_d_real: 1.7306e+00 l_d_fake: 1.7483e-01 out_d_fake: -2.1101e+00 
+2025-05-16 15:18:58,051 INFO: [train..][epoch: 13, iter:  75,800, lr:(1.000e-04,)] [eta: 1:39:28, time (data): 1.412 (0.007)] l_g_pix: 5.5360e-02 l_g_percep: 1.1609e+01 l_g_gan: 1.8192e-01 l_g_edge: 9.5534e-02 l_g_flat: 6.5165e-03 l_d_real: 2.5360e-01 out_d_real: 3.8406e+00 l_d_fake: 3.4175e-01 out_d_fake: -1.4759e+00 
+2025-05-16 15:21:18,726 INFO: [train..][epoch: 13, iter:  75,900, lr:(1.000e-04,)] [eta: 1:37:05, time (data): 1.406 (0.006)] l_g_pix: 4.1768e-02 l_g_percep: 9.0972e+00 l_g_gan: 1.6132e-01 l_g_edge: 6.2674e-02 l_g_flat: 6.6070e-03 l_d_real: 4.6888e-01 out_d_real: 1.9552e+00 l_d_fake: 3.6767e-01 out_d_fake: -1.2454e+00 
+2025-05-16 15:23:40,355 INFO: [train..][epoch: 13, iter:  76,000, lr:(1.000e-04,)] [eta: 1:34:43, time (data): 1.411 (0.006)] l_g_pix: 5.3809e-02 l_g_percep: 1.1362e+01 l_g_gan: 1.8694e-01 l_g_edge: 8.0012e-02 l_g_flat: 7.0313e-03 l_d_real: 3.7043e-01 out_d_real: 2.7667e+00 l_d_fake: 3.1203e-01 out_d_fake: -1.5574e+00 
+2025-05-16 15:26:01,947 INFO: [train..][epoch: 13, iter:  76,100, lr:(1.000e-04,)] [eta: 1:32:21, time (data): 1.416 (0.007)] l_g_pix: 5.2791e-02 l_g_percep: 1.0460e+01 l_g_gan: 2.7800e-01 l_g_edge: 7.6340e-02 l_g_flat: 6.8910e-03 l_d_real: 6.5830e-01 out_d_real: 1.7237e+00 l_d_fake: 1.1754e-01 out_d_fake: -2.6616e+00 
+2025-05-16 15:28:23,011 INFO: [train..][epoch: 13, iter:  76,200, lr:(1.000e-04,)] [eta: 1:29:59, time (data): 1.413 (0.007)] l_g_pix: 5.2153e-02 l_g_percep: 1.0020e+01 l_g_gan: 1.8620e-01 l_g_edge: 7.4622e-02 l_g_flat: 6.9264e-03 l_d_real: 2.8267e-01 out_d_real: 3.1697e+00 l_d_fake: 3.2782e-01 out_d_fake: -1.5340e+00 
+2025-05-16 15:30:43,475 INFO: [train..][epoch: 13, iter:  76,300, lr:(1.000e-04,)] [eta: 1:27:37, time (data): 1.404 (0.006)] l_g_pix: 4.3917e-02 l_g_percep: 9.2934e+00 l_g_gan: 1.4046e-01 l_g_edge: 6.1633e-02 l_g_flat: 5.3392e-03 l_d_real: 2.8475e-01 out_d_real: 3.2507e+00 l_d_fake: 4.7967e-01 out_d_fake: -9.2479e-01 
+2025-05-16 15:33:04,816 INFO: [train..][epoch: 13, iter:  76,400, lr:(1.000e-04,)] [eta: 1:25:14, time (data): 1.409 (0.006)] l_g_pix: 5.9181e-02 l_g_percep: 1.1758e+01 l_g_gan: 2.2372e-01 l_g_edge: 9.3447e-02 l_g_flat: 5.4736e-03 l_d_real: 2.3829e-01 out_d_real: 5.1062e+00 l_d_fake: 2.3402e-01 out_d_fake: -2.0016e+00 
+2025-05-16 15:35:26,349 INFO: [train..][epoch: 13, iter:  76,500, lr:(1.000e-04,)] [eta: 1:22:52, time (data): 1.415 (0.006)] l_g_pix: 4.8248e-02 l_g_percep: 1.0325e+01 l_g_gan: 2.0734e-01 l_g_edge: 6.9250e-02 l_g_flat: 5.7420e-03 l_d_real: 4.2868e-01 out_d_real: 3.4134e+00 l_d_fake: 3.2737e-01 out_d_fake: -1.7455e+00 
+2025-05-16 15:37:46,380 INFO: [train..][epoch: 13, iter:  76,600, lr:(1.000e-04,)] [eta: 1:20:30, time (data): 1.408 (0.006)] l_g_pix: 5.6201e-02 l_g_percep: 1.1236e+01 l_g_gan: 1.8370e-01 l_g_edge: 7.8978e-02 l_g_flat: 6.8251e-03 l_d_real: 2.7066e-01 out_d_real: 4.1805e+00 l_d_fake: 4.4100e-01 out_d_fake: -1.3953e+00 
+2025-05-16 15:40:07,772 INFO: [train..][epoch: 13, iter:  76,700, lr:(1.000e-04,)] [eta: 1:18:08, time (data): 1.414 (0.007)] l_g_pix: 6.2690e-02 l_g_percep: 1.2819e+01 l_g_gan: 2.3763e-01 l_g_edge: 9.9669e-02 l_g_flat: 9.0290e-03 l_d_real: 3.5707e-01 out_d_real: 2.8815e+00 l_d_fake: 2.4459e-01 out_d_fake: -2.1304e+00 
+2025-05-16 15:42:29,010 INFO: [train..][epoch: 13, iter:  76,800, lr:(1.000e-04,)] [eta: 1:15:46, time (data): 1.413 (0.006)] l_g_pix: 3.8898e-02 l_g_percep: 9.6448e+00 l_g_gan: 1.5435e-01 l_g_edge: 5.6658e-02 l_g_flat: 8.1500e-03 l_d_real: 3.2711e-01 out_d_real: 3.0269e+00 l_d_fake: 4.9821e-01 out_d_fake: -1.0452e+00 
+2025-05-16 15:44:50,087 INFO: [train..][epoch: 13, iter:  76,900, lr:(1.000e-04,)] [eta: 1:13:23, time (data): 1.411 (0.006)] l_g_pix: 4.6705e-02 l_g_percep: 9.5377e+00 l_g_gan: 1.9450e-01 l_g_edge: 6.7465e-02 l_g_flat: 5.2543e-03 l_d_real: 4.7092e-01 out_d_real: 2.1009e+00 l_d_fake: 2.8143e-01 out_d_fake: -1.6632e+00 
+2025-05-16 15:47:53,788 INFO: [train..][epoch: 14, iter:  77,000, lr:(1.000e-04,)] [eta: 1:11:04, time (data): 1.633 (0.229)] l_g_pix: 6.0299e-02 l_g_percep: 1.1993e+01 l_g_gan: 2.5780e-01 l_g_edge: 8.3400e-02 l_g_flat: 9.7241e-03 l_d_real: 6.0303e-01 out_d_real: 2.0318e+00 l_d_fake: 1.5968e-01 out_d_fake: -2.4166e+00 
+2025-05-16 15:50:13,920 INFO: [train..][epoch: 14, iter:  77,100, lr:(1.000e-04,)] [eta: 1:08:42, time (data): 1.401 (0.002)] l_g_pix: 4.2045e-02 l_g_percep: 9.3652e+00 l_g_gan: 2.7186e-01 l_g_edge: 6.1043e-02 l_g_flat: 6.4621e-03 l_d_real: 6.5197e-01 out_d_real: 2.0920e+00 l_d_fake: 1.2736e-01 out_d_fake: -2.5899e+00 
+2025-05-16 15:52:34,722 INFO: [train..][epoch: 14, iter:  77,200, lr:(1.000e-04,)] [eta: 1:06:20, time (data): 1.404 (0.003)] l_g_pix: 4.7513e-02 l_g_percep: 1.0687e+01 l_g_gan: 1.1183e-01 l_g_edge: 6.7911e-02 l_g_flat: 7.0926e-03 l_d_real: 1.5923e-01 out_d_real: 3.6430e+00 l_d_fake: 6.4818e-01 out_d_fake: -4.7015e-01 
+2025-05-16 15:54:55,112 INFO: [train..][epoch: 14, iter:  77,300, lr:(1.000e-04,)] [eta: 1:03:57, time (data): 1.404 (0.004)] l_g_pix: 4.6215e-02 l_g_percep: 9.6137e+00 l_g_gan: 2.0229e-01 l_g_edge: 6.8327e-02 l_g_flat: 5.9529e-03 l_d_real: 2.6044e-01 out_d_real: 3.9949e+00 l_d_fake: 2.9202e-01 out_d_fake: -1.7301e+00 
+2025-05-16 15:57:15,741 INFO: [train..][epoch: 14, iter:  77,400, lr:(1.000e-04,)] [eta: 1:01:35, time (data): 1.405 (0.004)] l_g_pix: 3.0278e-02 l_g_percep: 7.0050e+00 l_g_gan: 1.9680e-01 l_g_edge: 4.2139e-02 l_g_flat: 4.3014e-03 l_d_real: 1.7413e-01 out_d_real: 4.2031e+00 l_d_fake: 3.0673e-01 out_d_fake: -1.6595e+00 
+2025-05-16 15:59:36,828 INFO: [train..][epoch: 14, iter:  77,500, lr:(1.000e-04,)] [eta: 0:59:13, time (data): 1.411 (0.005)] l_g_pix: 5.6575e-02 l_g_percep: 1.0190e+01 l_g_gan: 1.6603e-01 l_g_edge: 7.8295e-02 l_g_flat: 7.2877e-03 l_d_real: 5.5253e-01 out_d_real: 2.3891e+00 l_d_fake: 4.2305e-01 out_d_fake: -1.2364e+00 
+2025-05-16 16:01:57,440 INFO: [train..][epoch: 14, iter:  77,600, lr:(1.000e-04,)] [eta: 0:56:50, time (data): 1.409 (0.006)] l_g_pix: 3.5266e-02 l_g_percep: 8.1877e+00 l_g_gan: 2.4044e-01 l_g_edge: 5.0081e-02 l_g_flat: 5.6108e-03 l_d_real: 8.0802e-01 out_d_real: 1.0901e+00 l_d_fake: 2.1717e-01 out_d_fake: -2.1862e+00 
+2025-05-16 16:04:18,761 INFO: [train..][epoch: 14, iter:  77,700, lr:(1.000e-04,)] [eta: 0:54:28, time (data): 1.414 (0.007)] l_g_pix: 6.7859e-02 l_g_percep: 1.2999e+01 l_g_gan: 2.7265e-01 l_g_edge: 1.1295e-01 l_g_flat: 7.1032e-03 l_d_real: 4.8359e-01 out_d_real: 3.1485e+00 l_d_fake: 1.4787e-01 out_d_fake: -2.5779e+00 
+2025-05-16 16:06:39,118 INFO: [train..][epoch: 14, iter:  77,800, lr:(1.000e-04,)] [eta: 0:52:06, time (data): 1.408 (0.007)] l_g_pix: 5.3062e-02 l_g_percep: 1.1249e+01 l_g_gan: 1.9297e-01 l_g_edge: 8.0775e-02 l_g_flat: 3.6944e-03 l_d_real: 3.0423e-01 out_d_real: 3.8019e+00 l_d_fake: 3.0977e-01 out_d_fake: -1.6196e+00 
+2025-05-16 16:08:59,634 INFO: [train..][epoch: 14, iter:  77,900, lr:(1.000e-04,)] [eta: 0:49:44, time (data): 1.406 (0.007)] l_g_pix: 3.9315e-02 l_g_percep: 8.8352e+00 l_g_gan: 1.9833e-01 l_g_edge: 6.0154e-02 l_g_flat: 5.0342e-03 l_d_real: 3.3193e-01 out_d_real: 3.5148e+00 l_d_fake: 3.0068e-01 out_d_fake: -1.6820e+00 
+2025-05-16 16:11:19,708 INFO: [train..][epoch: 14, iter:  78,000, lr:(1.000e-04,)] [eta: 0:47:21, time (data): 1.403 (0.007)] l_g_pix: 5.6249e-02 l_g_percep: 1.1768e+01 l_g_gan: 2.3531e-01 l_g_edge: 9.3355e-02 l_g_flat: 8.2189e-03 l_d_real: 4.4844e-01 out_d_real: 2.8873e+00 l_d_fake: 2.6626e-01 out_d_fake: -2.0849e+00 
+2025-05-16 16:13:40,425 INFO: [train..][epoch: 14, iter:  78,100, lr:(1.000e-04,)] [eta: 0:44:59, time (data): 1.408 (0.006)] l_g_pix: 3.8538e-02 l_g_percep: 9.1337e+00 l_g_gan: 2.2766e-01 l_g_edge: 5.9702e-02 l_g_flat: 6.6507e-03 l_d_real: 5.0585e-01 out_d_real: 1.7553e+00 l_d_fake: 2.5008e-01 out_d_fake: -2.0257e+00 
+2025-05-16 16:16:01,310 INFO: [train..][epoch: 14, iter:  78,200, lr:(1.000e-04,)] [eta: 0:42:37, time (data): 1.409 (0.007)] l_g_pix: 5.0517e-02 l_g_percep: 1.0315e+01 l_g_gan: 1.7717e-01 l_g_edge: 8.0593e-02 l_g_flat: 7.7469e-03 l_d_real: 3.2532e-01 out_d_real: 3.5725e+00 l_d_fake: 3.9458e-01 out_d_fake: -1.3766e+00 
+2025-05-16 16:18:21,762 INFO: [train..][epoch: 14, iter:  78,300, lr:(1.000e-04,)] [eta: 0:40:15, time (data): 1.404 (0.007)] l_g_pix: 5.2636e-02 l_g_percep: 1.1052e+01 l_g_gan: 2.4001e-01 l_g_edge: 8.6180e-02 l_g_flat: 5.7506e-03 l_d_real: 3.8768e-01 out_d_real: 4.5723e+00 l_d_fake: 1.8255e-01 out_d_fake: -2.2166e+00 
+2025-05-16 16:20:42,314 INFO: [train..][epoch: 14, iter:  78,400, lr:(1.000e-04,)] [eta: 0:37:53, time (data): 1.405 (0.007)] l_g_pix: 4.4630e-02 l_g_percep: 1.0185e+01 l_g_gan: 2.2274e-01 l_g_edge: 6.6386e-02 l_g_flat: 6.3160e-03 l_d_real: 4.3476e-01 out_d_real: 2.8220e+00 l_d_fake: 2.6385e-01 out_d_fake: -1.9613e+00 
+2025-05-16 16:23:02,779 INFO: [train..][epoch: 14, iter:  78,500, lr:(1.000e-04,)] [eta: 0:35:30, time (data): 1.402 (0.007)] l_g_pix: 6.6162e-02 l_g_percep: 1.3237e+01 l_g_gan: 2.2843e-01 l_g_edge: 9.6212e-02 l_g_flat: 8.5000e-03 l_d_real: 3.4677e-01 out_d_real: 3.0471e+00 l_d_fake: 2.4099e-01 out_d_fake: -2.0424e+00 
+2025-05-16 16:25:22,869 INFO: [train..][epoch: 14, iter:  78,600, lr:(1.000e-04,)] [eta: 0:33:08, time (data): 1.401 (0.006)] l_g_pix: 5.0362e-02 l_g_percep: 1.0405e+01 l_g_gan: 2.3629e-01 l_g_edge: 8.1169e-02 l_g_flat: 8.0852e-03 l_d_real: 4.4839e-01 out_d_real: 2.1518e+00 l_d_fake: 1.9298e-01 out_d_fake: -2.1692e+00 
+2025-05-16 16:27:43,426 INFO: [train..][epoch: 14, iter:  78,700, lr:(1.000e-04,)] [eta: 0:30:46, time (data): 1.405 (0.005)] l_g_pix: 5.2494e-02 l_g_percep: 1.0170e+01 l_g_gan: 2.4295e-01 l_g_edge: 8.3374e-02 l_g_flat: 5.1102e-03 l_d_real: 3.2384e-01 out_d_real: 3.8171e+00 l_d_fake: 2.0403e-01 out_d_fake: -2.2246e+00 
+2025-05-16 16:30:03,880 INFO: [train..][epoch: 14, iter:  78,800, lr:(1.000e-04,)] [eta: 0:28:24, time (data): 1.405 (0.004)] l_g_pix: 4.4198e-02 l_g_percep: 9.5565e+00 l_g_gan: 1.8274e-01 l_g_edge: 6.5391e-02 l_g_flat: 5.4460e-03 l_d_real: 2.3236e-01 out_d_real: 3.0009e+00 l_d_fake: 3.3863e-01 out_d_fake: -1.4885e+00 
+2025-05-16 16:32:24,424 INFO: [train..][epoch: 14, iter:  78,900, lr:(1.000e-04,)] [eta: 0:26:02, time (data): 1.405 (0.004)] l_g_pix: 4.6308e-02 l_g_percep: 9.2377e+00 l_g_gan: 2.9271e-01 l_g_edge: 6.7106e-02 l_g_flat: 8.4214e-03 l_d_real: 7.5391e-01 out_d_real: 1.4381e+00 l_d_fake: 1.2281e-01 out_d_fake: -2.8029e+00 
+2025-05-16 16:34:44,506 INFO: [train..][epoch: 14, iter:  79,000, lr:(1.000e-04,)] [eta: 0:23:39, time (data): 1.403 (0.004)] l_g_pix: 6.0422e-02 l_g_percep: 1.1027e+01 l_g_gan: 2.5228e-01 l_g_edge: 8.4087e-02 l_g_flat: 6.3958e-03 l_d_real: 4.2378e-01 out_d_real: 4.5747e+00 l_d_fake: 1.8869e-01 out_d_fake: -2.3328e+00 
+2025-05-16 16:37:04,680 INFO: [train..][epoch: 14, iter:  79,100, lr:(1.000e-04,)] [eta: 0:21:17, time (data): 1.401 (0.003)] l_g_pix: 4.4511e-02 l_g_percep: 9.9568e+00 l_g_gan: 2.1080e-01 l_g_edge: 6.7625e-02 l_g_flat: 6.8509e-03 l_d_real: 2.4733e-01 out_d_real: 3.4915e+00 l_d_fake: 2.9552e-01 out_d_fake: -1.8123e+00 
+2025-05-16 16:39:24,722 INFO: [train..][epoch: 14, iter:  79,200, lr:(1.000e-04,)] [eta: 0:18:55, time (data): 1.401 (0.004)] l_g_pix: 5.6161e-02 l_g_percep: 1.1824e+01 l_g_gan: 2.0603e-01 l_g_edge: 8.9280e-02 l_g_flat: 5.9779e-03 l_d_real: 3.2215e-01 out_d_real: 4.0146e+00 l_d_fake: 3.4621e-01 out_d_fake: -1.7125e+00 
+2025-05-16 16:41:45,634 INFO: [train..][epoch: 14, iter:  79,300, lr:(1.000e-04,)] [eta: 0:16:33, time (data): 1.412 (0.006)] l_g_pix: 5.7919e-02 l_g_percep: 1.1464e+01 l_g_gan: 1.9489e-01 l_g_edge: 9.5025e-02 l_g_flat: 5.6058e-03 l_d_real: 2.1419e-01 out_d_real: 5.9030e+00 l_d_fake: 2.8072e-01 out_d_fake: -1.6676e+00 
+2025-05-16 16:44:07,091 INFO: [train..][epoch: 14, iter:  79,400, lr:(1.000e-04,)] [eta: 0:14:11, time (data): 1.414 (0.006)] l_g_pix: 6.0547e-02 l_g_percep: 1.2029e+01 l_g_gan: 2.3256e-01 l_g_edge: 9.9973e-02 l_g_flat: 6.9646e-03 l_d_real: 3.5527e-01 out_d_real: 5.7104e+00 l_d_fake: 2.7114e-01 out_d_fake: -2.0537e+00 
+2025-05-16 16:46:27,267 INFO: [train..][epoch: 14, iter:  79,500, lr:(1.000e-04,)] [eta: 0:11:49, time (data): 1.404 (0.008)] l_g_pix: 5.5094e-02 l_g_percep: 1.1735e+01 l_g_gan: 2.6261e-01 l_g_edge: 9.1746e-02 l_g_flat: 7.2423e-03 l_d_real: 5.0896e-01 out_d_real: 2.3085e+00 l_d_fake: 1.7528e-01 out_d_fake: -2.4495e+00 
+2025-05-16 16:48:48,615 INFO: [train..][epoch: 14, iter:  79,600, lr:(1.000e-04,)] [eta: 0:09:27, time (data): 1.409 (0.007)] l_g_pix: 6.5209e-02 l_g_percep: 1.3658e+01 l_g_gan: 1.9056e-01 l_g_edge: 1.0060e-01 l_g_flat: 6.0770e-03 l_d_real: 2.2917e-01 out_d_real: 4.4410e+00 l_d_fake: 3.6110e-01 out_d_fake: -1.5439e+00 
+2025-05-16 16:51:08,782 INFO: [train..][epoch: 14, iter:  79,700, lr:(1.000e-04,)] [eta: 0:07:04, time (data): 1.402 (0.006)] l_g_pix: 4.8957e-02 l_g_percep: 1.0043e+01 l_g_gan: 2.1821e-01 l_g_edge: 7.8072e-02 l_g_flat: 7.4623e-03 l_d_real: 5.4588e-01 out_d_real: 2.2403e+00 l_d_fake: 2.6873e-01 out_d_fake: -1.9130e+00 
+2025-05-16 16:53:29,858 INFO: [train..][epoch: 14, iter:  79,800, lr:(1.000e-04,)] [eta: 0:04:42, time (data): 1.407 (0.007)] l_g_pix: 4.9886e-02 l_g_percep: 1.0656e+01 l_g_gan: 1.6003e-01 l_g_edge: 7.5243e-02 l_g_flat: 7.9017e-03 l_d_real: 2.6768e-01 out_d_real: 3.3796e+00 l_d_fake: 4.9977e-01 out_d_fake: -1.1001e+00 
+2025-05-16 16:55:51,452 INFO: [train..][epoch: 14, iter:  79,900, lr:(1.000e-04,)] [eta: 0:02:20, time (data): 1.419 (0.007)] l_g_pix: 5.1884e-02 l_g_percep: 1.1672e+01 l_g_gan: 2.0114e-01 l_g_edge: 8.0737e-02 l_g_flat: 5.8617e-03 l_d_real: 4.1948e-01 out_d_real: 3.0245e+00 l_d_fake: 2.4426e-01 out_d_fake: -1.7668e+00 
+2025-05-16 16:58:11,864 INFO: [train..][epoch: 14, iter:  80,000, lr:(1.000e-04,)] [eta: -1 day, 23:59:59, time (data): 1.411 (0.007)] l_g_pix: 5.5189e-02 l_g_percep: 1.2001e+01 l_g_gan: 1.5516e-01 l_g_edge: 8.2278e-02 l_g_flat: 5.1267e-03 l_d_real: 3.0942e-01 out_d_real: 4.9840e+00 l_d_fake: 4.1105e-01 out_d_fake: -1.1404e+00 
+2025-05-16 16:58:11,864 INFO: Saving models and training states.
+2025-05-16 16:59:37,385 INFO: End of training. Time consumed: 17:46:30
+2025-05-16 16:59:37,385 INFO: Save the latest model.

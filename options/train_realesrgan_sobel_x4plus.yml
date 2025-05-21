@@ -5,9 +5,8 @@ scale: 4
 num_gpu: auto  # auto: can infer from your visible devices automatically. official: 4 GPUs
 manual_seed: 0
 
-lambda_edge: 5.0      # weight for Sobel edge loss   (λ_edge)
+lambda_edge: 1.0      # weight for Sobel edge loss   (λ_edge)
 lambda_flat: 0.2      # weight for TV×Sobel loss     (λ_tv  )
-sobel_edge_thresh: 0.5
 sobel_thresh: 0.02    # binarisation threshold for the edge mask
 
 # ----------------- options for synthesizing training data in RealESRGANModel ----------------- #
@@ -36,7 +35,7 @@ gray_noise_prob2: 0.4
 jpeg_range2: [30, 95]
 
 gt_size: 256
-queue_size: 180
+queue_size: 320
 
 # dataset and data loader settings
 datasets:
@@ -73,7 +72,7 @@ datasets:
     # data loader
     use_shuffle: true
     num_worker_per_gpu: 5
-    batch_size_per_gpu: 10
+    batch_size_per_gpu: 16
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
@@ -125,10 +124,10 @@ train:
 
   scheduler:
     type: MultiStepLR
-    milestones: [200000]
+    milestones: [150000]
     gamma: 0.5
 
-  total_iter: 200000
+  total_iter: 150000
   warmup_iter: -1  # no warm up
 
   # losses

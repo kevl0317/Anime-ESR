@@ -6,6 +6,10 @@ inference_realesrgan.py
 requirements.txt
 setup.cfg
 setup.py
+DatasetPrep/ExtractDataFromAnime.py
+DatasetPrep/MoveDataset.py
+DatasetPrep/PixivAuth.py
+DatasetPrep/__init__.py
 assets/realesrgan_logo.png
 assets/realesrgan_logo_ai.png
 assets/realesrgan_logo_av.png
@@ -40,6 +44,8 @@ realesrgan/data/realesrgan_dataset.py
 realesrgan/data/realesrgan_paired_dataset.py
 realesrgan/models/__init__.py
 realesrgan/models/realesrgan_model.py
+realesrgan/models/realesrgan_model_old.py
+realesrgan/models/realesrgan_model_sobel_analog.py
 realesrgan/models/realesrnet_model.py
 scripts/extract_subimages.py
 scripts/generate_meta_info.py
