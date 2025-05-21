@@ -40,7 +40,7 @@ def downsample_images(input_dir, output_dir, scale=4):
 # Example usage
 if __name__ == "__main__":
     downsample_images(
-        input_dir="datasets/anime/illustrateData_val",      # <-- change to your input folder
-        output_dir="datasets/anime/illustrateData_val_lr_x4_bicubic",  # <-- change to your desired output folder
-        scale=4
+        input_dir="datasets/anime/galData_val",      # <-- change to your input folder
+        output_dir="datasets/anime/galData_val_lr_x2_bicubic",  # <-- change to your desired output folder
+        scale=2
     )

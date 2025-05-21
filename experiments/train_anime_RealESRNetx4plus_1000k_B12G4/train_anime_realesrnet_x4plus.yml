@@ -1,6 +1,6 @@
-# GENERATE TIME: Wed May 21 00:44:27 2025
+# GENERATE TIME: Wed May 21 14:07:31 2025
 # CMD:
-# realesrgan/train.py -opt options/train_anime_realesrnet_x4plus.yml
+# realesrgan/train.py -opt options/train_anime_realesrnet_x4plus.yml --auto_resume
 
 # general settings
 name: train_anime_RealESRNetx4plus_1000k_B12G4
