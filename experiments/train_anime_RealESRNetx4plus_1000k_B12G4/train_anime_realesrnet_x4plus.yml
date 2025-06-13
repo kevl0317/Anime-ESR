@@ -1,6 +1,6 @@
-# GENERATE TIME: Wed May 21 14:07:31 2025
+# GENERATE TIME: Fri Jun 13 04:36:22 2025
 # CMD:
-# realesrgan/train.py -opt options/train_anime_realesrnet_x4plus.yml --auto_resume
+# .\realesrgan\train.py -opt .\options\train_anime_realesrnet_x4plus.yml --auto_resume
 
 # general settings
 name: train_anime_RealESRNetx4plus_1000k_B12G4
@@ -32,7 +32,7 @@ gray_noise_prob2: 0.4
 jpeg_range2: [30, 95]
 
 gt_size: 256
-queue_size: 320
+queue_size: 120
 
 # dataset and data loader settings
 datasets:
@@ -68,8 +68,8 @@ datasets:
 
     # data loader
     use_shuffle: true
-    num_worker_per_gpu: 5
-    batch_size_per_gpu: 16
+    num_worker_per_gpu: 8
+    batch_size_per_gpu: 12
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
